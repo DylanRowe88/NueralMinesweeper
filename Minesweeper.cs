@@ -26,28 +26,38 @@ namespace NueralMinesweeper
 
         public readonly int width, height;
         public readonly int mineCount;    // How many mines are in field
-        public readonly int uncoveredCount; // How many tiles are covered
+        public readonly int uncoveredCount; // How many tiles have been uncovered
         public readonly int moveCount;    // How many moves have been made on field
         public readonly int boomCount;    // How many mines have been hit
 
         private List<Mine> field = new();
         private Random rng = new Random();
 
-        public Minefield(List<int> Minefield) // Input a pre-generated minefield
+        public Minefield(int width, int height, List<int> Minefield) // Input a pre-generated minefield
         {
             foreach (int val in Minefield)
             {
-                field.Add(val);
+                int index = field.Count;
+                int x = index % width;
+                int y = index / height;
+                field.Add(new(val, x, y));
             }
         }
         public Minefield(int width, int height, int minecount) // Create minefield with dimensions and minecount
         {
-            field = nodes; // Defined Starting point
-            length = pathLength;
+            for (int i = 0; i < width * height; i++)
+            {
+                int index = field.Count;
+                int x = index % width;
+                int y = index / height;
+                // Generate a random number between -2 and 8
+                field.Add(new(rng.Next(-2, 9), x, y));
+            }
         }
+        public int count => field.Count;
         public double RatioUncovered()
         {
-            return uncoveredCount/field.Count;
+            return uncoveredCount / field.Count;
         }
         public int CompareTo(object? obj)
         {
@@ -71,3 +81,4 @@ namespace NueralMinesweeper
         //public readonly List<Double> BestFitperGeneration = new();
 
     }
+}
