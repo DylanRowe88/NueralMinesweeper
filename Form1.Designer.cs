@@ -32,23 +32,43 @@
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             panel1 = new Panel();
+            chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             panel2 = new Panel();
             pictureBox1 = new PictureBox();
-            chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            button1 = new Button();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
             SuspendLayout();
             // 
             // panel1
             // 
+            panel1.Controls.Add(button1);
             panel1.Controls.Add(chart1);
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
             panel1.Size = new Size(348, 880);
             panel1.TabIndex = 0;
+            // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            chart1.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            chart1.Legends.Add(legend1);
+            chart1.Location = new Point(21, 560);
+            chart1.Name = "chart1";
+            series1.ChartArea = "ChartArea1";
+            series1.IsXValueIndexed = true;
+            series1.Legend = "Legend1";
+            series1.Name = "Uncovered";
+            chart1.Series.Add(series1);
+            chart1.Size = new Size(300, 300);
+            chart1.TabIndex = 0;
+            chart1.Text = "chart1";
             // 
             // panel2
             // 
@@ -70,21 +90,14 @@
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
             // 
-            // chart1
+            // button1
             // 
-            chartArea1.Name = "ChartArea1";
-            chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            chart1.Legends.Add(legend1);
-            chart1.Location = new Point(21, 560);
-            chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            chart1.Series.Add(series1);
-            chart1.Size = new Size(300, 300);
-            chart1.TabIndex = 0;
-            chart1.Text = "chart1";
+            button1.Location = new Point(25, 41);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 1;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -96,9 +109,9 @@
             Name = "Form1";
             Text = "Form1";
             panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
             panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
             ResumeLayout(false);
         }
 
@@ -108,5 +121,6 @@
         private Panel panel2;
         private PictureBox pictureBox1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private Button button1;
     }
 }

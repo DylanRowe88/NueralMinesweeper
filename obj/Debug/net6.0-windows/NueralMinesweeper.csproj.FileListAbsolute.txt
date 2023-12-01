@@ -1,0 +1,8 @@
+C:\Users\thedy\Documents\GitHub\NueralMinesweeper\obj\Debug\net6.0-windows\NueralMinesweeper.csproj.AssemblyReference.cache
+C:\Users\thedy\Documents\GitHub\NueralMinesweeper\obj\Debug\net6.0-windows\NueralMinesweeper.Form1.resources
+C:\Users\thedy\Documents\GitHub\NueralMinesweeper\obj\Debug\net6.0-windows\NueralMinesweeper.csproj.GenerateResource.cache
+C:\Users\thedy\Documents\GitHub\NueralMinesweeper\obj\Debug\net6.0-windows\NueralMinesweeper.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\thedy\Documents\GitHub\NueralMinesweeper\obj\Debug\net6.0-windows\NueralMinesweeper.AssemblyInfoInputs.cache
+C:\Users\thedy\Documents\GitHub\NueralMinesweeper\obj\Debug\net6.0-windows\NueralMinesweeper.AssemblyInfo.cs
+C:\Users\thedy\Documents\GitHub\NueralMinesweeper\obj\Debug\net6.0-windows\NueralMinesweeper.csproj.CoreCompileInputs.cache
+C:\Users\thedy\Documents\GitHub\NueralMinesweeper\obj\Debug\net6.0-windows\NueralMinesweeper.sourcelink.json

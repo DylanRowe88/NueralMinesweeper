@@ -11,20 +11,25 @@ namespace NueralMinesweeper
     {
         private class Mine
         {
-            public Mine() { mineVal = 0; X = -1; Y = -1; } // Null Node
-            public Mine(int newMineVal, int newX, int newY)
+            public Mine() {} // Null Node
+            public Mine(int newMineVal, int newRow, int newCol, int newIndex)
             {
-                mineVal = newMineVal; X = newX; Y = newY;
+                mineVal = newMineVal; Row = newRow; Col = newCol; Index = newIndex;
+                if(mineVal == -1)
+                {
+                    isMine = true;
+                }
             }
-
-            public bool isMine;
-            public bool isCovered;
-            public int mineVal;
-            public double X, Y;
-            public override string ToString() => $"({X}, {Y})";
+            public bool isMine = false;
+            public bool isCovered = true;
+            public bool isFlagged = false;
+            public int mineVal = 0;
+            public double Row = -1, Col = -1, Index = -1;
+            public override string ToString() => $"({Row}, {Col})";
         }
 
         public readonly int width, height;
+        public readonly int fieldSize;    // Width * Height of field
         public readonly int mineCount;    // How many mines are in field
         public readonly int uncoveredCount; // How many tiles have been uncovered
         public readonly int moveCount;    // How many moves have been made on field
@@ -32,33 +37,60 @@ namespace NueralMinesweeper
 
         private List<Mine> field = new();
         private Random rng = new Random();
-
-        public Minefield(int width, int height, List<int> Minefield) // Input a pre-generated minefield
+        public int this[int index]
         {
+            get 
+            {
+                if (field[index].isCovered){return 0;}
+                return field[index].mineVal;
+            }
+        }
+
+        public Minefield(int newWidth, int newHeight, List<int> Minefield) // Input a pre-generated minefield
+        {
+            width = newWidth; height = newHeight;
             foreach (int val in Minefield)
             {
                 int index = field.Count;
                 int x = index % width;
                 int y = index / height;
-                field.Add(new(val, x, y));
+                field.Add(new(val, x, y, index));
+                if(val == -1){mineCount++;}
             }
+            fieldSize = field.Count;
         }
-        public Minefield(int width, int height, int minecount) // Create minefield with dimensions and minecount
+
+        public Minefield(int newWidth, int newHeight, int newMinecount) // Create minefield with dimensions and minecount
         {
+            width = newWidth; height = newHeight;
             for (int i = 0; i < width * height; i++)
             {
                 int index = field.Count;
                 int x = index % width;
                 int y = index / height;
                 // Generate a random number between -2 and 8
-                field.Add(new(rng.Next(-2, 9), x, y));
+                field.Add(new(rng.Next(-2, 9), x, y, convertRowColtoIndex(x,y, width)));
+            }
+            fieldSize = field.Count;
+            mineCount = newMinecount;
+        }
+        public void makeMove(int mineIndex)
+        {
+            if (!field[mineIndex].isCovered)
+            {
+                return;
+            }
+            if (field[mineIndex].mineVal != -1)
+            {
+                field[mineIndex].isCovered = false;
             }
         }
-        public int count => field.Count;
+
         public double RatioUncovered()
         {
             return uncoveredCount / field.Count;
         }
+
         public int CompareTo(object? obj)
         {
             if (obj is Minefield T)
@@ -70,15 +102,29 @@ namespace NueralMinesweeper
             return 1;
         }
 
+        public (int, int) getRowCol(int index)
+        {
+            int row = index / width; // Calculate the row
+            int col = index % width; // Calculate the column
+
+            return (row, col);
+        }
+        static public int convertRowColtoIndex(int row, int col, int width)
+        {
+            int index = row * width + col; // Calculate index
+
+            return index;
+        }
     }
     // internal class Minesweeper // This was here at first, idk what internal does
     class Minesweeper
     {
         public Minefield Field;
-        public Minesweeper(int width, int height, int mineCount) { Field = new(width, height, mineCount); }
+        //bool Started = false;
 
-        //public readonly List<List<Minefield>> Generations = new();
-        //public readonly List<Double> BestFitperGeneration = new();
-
+        public Minesweeper(int width, int height, int mineCount)
+        {
+            Field = new(width, height, mineCount);
+        }
     }
 }
