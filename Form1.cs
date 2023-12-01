@@ -15,7 +15,7 @@ namespace NueralMinesweeper
         {
             InitializeComponent();
             //WinNotif("Test");
-            StartNewGame(3, 3, 9);
+            StartNewGame(30, 30, 400);
         }
 
         // Function I made to create windows notifications, unused for now
@@ -63,9 +63,6 @@ namespace NueralMinesweeper
             {
                 myMinesweeper.Field.makeMove(btn.index);
                 btn.setTileVal(myMinesweeper.Field[btn.index]);
-                if (btn.row != 0 || btn.col != 0)
-                { 
-                }
             }
         }
 
@@ -80,7 +77,7 @@ namespace NueralMinesweeper
     // Created class inheriting Button to customize its shape
     class UIMine : Button
     {
-        public readonly int sideLen = 30; // Field is made of squares...
+        public readonly int sideLen = 35; // Field is made of squares...
         public readonly int index = -1;
         public readonly int row = -1;
         public readonly int col = -1;
@@ -93,9 +90,11 @@ namespace NueralMinesweeper
             this.BackColor = Color.LightBlue;
             this.FlatAppearance.MouseOverBackColor = Color.Gold;
             this.FlatStyle = FlatStyle.Flat;
+            this.BackgroundImageLayout = ImageLayout.Stretch;
 
             this.index = newIndex;
-            this.Text = "0"; // Account for 0 index
+            this.Text = ""; // Account for 0 index
+            this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperCoveredTile.png");
             this.row = rowCol.Item1;
             this.col = rowCol.Item2;
             this.Height = sideLen;
@@ -103,10 +102,20 @@ namespace NueralMinesweeper
             this.Location = new Point(row * sideLen + xOffset, col * sideLen + yOffset);
         }
         // public Mine Mine { set; get; }
-        public void setTileVal(int     val) { this.Text = val.ToString(); 
-            if (val == -1){ 
+        public void setTileVal(int     val)
+        {
+            this.Text = val.ToString();
+            if (val == -1)
+            {
                 this.BackColor = Color.Red;
-            }}
+                this.Text = "";
+                this.BackgroundImage = Image.FromFile(@"..\..\..\Minesweeper_1992.png");
+            }
+            else
+            {
+                this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperUncoveredTile.png");
+            }
+        }
         public void setTileText(string text) { this.Text = text; } // For marking flags and bombs
 
         protected override void OnPaint(PaintEventArgs e)

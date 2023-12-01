@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NueralMinesweeper")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+780ad08005a54253399b35c430255aa01bc4e24e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dad108d9031e845a9c9208da29e51e195f914779")]
 [assembly: System.Reflection.AssemblyProductAttribute("NueralMinesweeper")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NueralMinesweeper")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

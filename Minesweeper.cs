@@ -14,24 +14,22 @@ namespace NueralMinesweeper
             public Tile() { } // Null Tile
             public Tile(int newRow, int newCol, int newIndex)
             {
+                if (newIndex == -1)
+                {
+                }
                 Row = newRow; Col = newCol; Index = newIndex;
-                if(tileVal == -1)
-                {
-                    isMine = true;
-                }
             }
-            public Tile(int newTileVal, int newRow, int newCol, int newIndex) // If tileVal is known ahead of time
+            public Tile(int newTileVal, int newRow, int newCol, int newIndex, bool newIsMine) // If tileVal is known ahead of time
             {
-                tileVal = newTileVal; Row = newRow; Col = newCol; Index = newIndex;
-                if (tileVal == -1)
+                if (newIndex == -1)
                 {
-                    isMine = true;
                 }
+                adjMineCnt = newTileVal; Row = newRow; Col = newCol; Index = newIndex; isMine = newIsMine;
             }
             public bool isMine = false;
             public bool isCovered = true;
             public bool isFlagged = false;
-            public int tileVal = 0;
+            public int adjMineCnt = 0;
             public double Row = -1, Col = -1, Index = -1;
             public override string ToString() => $"({Row}, {Col})";
         }
@@ -49,8 +47,9 @@ namespace NueralMinesweeper
         {
             get 
             {
-                if (field[index].isCovered){return 0;}
-                return field[index].tileVal;
+                if (field[index].isCovered) { return 0; }
+                if (field[index].isMine) { return -1; }
+                return field[index].adjMineCnt;
             }
         }
 
@@ -62,8 +61,8 @@ namespace NueralMinesweeper
                 int index = field.Count;
                 int x = index % width;
                 int y = index / height;
-                field.Add(new(val, x, y, index));
-                if(val == -1){mineCount++;}
+                field.Add(new(val, x, y, index, Minefield[index] == -1 ? true:false));
+                if(val == -1){mineCount++; }
             }
             fieldSize = field.Count;
         }
@@ -76,25 +75,51 @@ namespace NueralMinesweeper
                 int index = field.Count;
                 int x = index % width;
                 int y = index / height;
-                field.Add(new(x, y, convertRowColtoIndex(x, y, width)));
+                field.Add(new(x, y, getIndex(x, y)));
             }
             fieldSize = field.Count;
             mineCount = newMinecount;
             for (int i = 0; i < mineCount; i++)
             {
                 int randMineIndex = rng.Next(fieldSize);
+                while (field[randMineIndex].isMine == true)
+                {
+                    randMineIndex = rng.Next(fieldSize);
+                }
                 field[randMineIndex].isMine = true;
-                field[randMineIndex].tileVal = -1;
+                (int, int) RowCol = getRowCol(randMineIndex);
+
+                tryIncrement(RowCol.Item1 + 1, RowCol.Item2);     // Right
+                tryIncrement(RowCol.Item1 + 1, RowCol.Item2 + 1); // Down/Right
+                tryIncrement(RowCol.Item1,     RowCol.Item2 + 1); // Down
+
+                tryIncrement(RowCol.Item1 - 1, RowCol.Item2);     // Left
+                tryIncrement(RowCol.Item1 - 1, RowCol.Item2 - 1); // Up/Left
+                tryIncrement(RowCol.Item1,     RowCol.Item2 - 1); // Up
+
+                tryIncrement(RowCol.Item1 + 1, RowCol.Item2 - 1); // Up/Right
+                tryIncrement(RowCol.Item1 - 1, RowCol.Item2 + 1); // Down/Left
+            }
+        }
+        private void tryIncrement(int Row, int Col)
+        {
+            int index = getIndex(Row, Col);
+            if (index >= 0 && index < fieldSize && !field[index].isMine) // Ensure tile is on field and not a mine
+            {
+                field[index].adjMineCnt++;
+                if (Row == 0)
+                {
+                }
             }
         }
         public void makeMove(int mineIndex)
         {
-            if (!field[mineIndex].isCovered)
+            if (!field[mineIndex].isCovered) // Already uncovered?
             {
                 return;
             }
             // It is a covered tile
-            if (field[mineIndex].tileVal != -1)
+            if (!field[mineIndex].isFlagged) // Flagged? (Do nothing)
             {
                 field[mineIndex].isCovered = false;
             }
@@ -123,8 +148,9 @@ namespace NueralMinesweeper
 
             return (row, col);
         }
-        static public int convertRowColtoIndex(int row, int col, int width)
+        public int getIndex(int row, int col)
         {
+            if (row < 0 || col < 0 || row * col >= fieldSize) { return -1; }
             int index = row * width + col; // Calculate index
 
             return index;
