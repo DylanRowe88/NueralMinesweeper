@@ -1,5 +1,5 @@
 using Microsoft.Toolkit.Uwp.Notifications; // If we want to do windows toast notifs
-
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Xml.Linq;
 
@@ -9,12 +9,13 @@ namespace NueralMinesweeper
     {
         private Minesweeper? myMinesweeper;
         readonly List<UIMine> uiMineList = new();
+        Stopwatch myAlgStopWatch = new();
 
         public Form1()
         {
             InitializeComponent();
             //WinNotif("Test");
-            StartNewGame(30, 30, 40);
+            StartNewGame(3, 3, 9);
         }
 
         // Function I made to create windows notifications, unused for now
@@ -39,6 +40,7 @@ namespace NueralMinesweeper
             }
             uiMineList.Clear();
             int tempCount = myMinesweeper.Field.fieldSize;
+            myAlgStopWatch.Start();
             for (int i = 0; i < tempCount; i++)
             {
                 UIMine button = new(i, myMinesweeper.Field.getRowCol(i));
@@ -46,9 +48,12 @@ namespace NueralMinesweeper
                 pictureBox1.Controls.Add(button);
                 uiMineList.Add(button);
             }
+
             chart1.Series["Uncovered"].Points.Clear();
             //progressBar1.Maximum = myMinesweeper.Field.count
             pictureBox1.Invalidate();
+            myAlgStopWatch.Stop();
+            label1.Text = "Algorithm Completion \r\nTime (s): " + myAlgStopWatch.Elapsed.ToString("s'.'FFFFFFF");
         }
 
         void OnMineClick(object? sender, EventArgs e, int nodeIndex)
@@ -57,7 +62,10 @@ namespace NueralMinesweeper
             if(myMinesweeper != null)
             {
                 myMinesweeper.Field.makeMove(btn.index);
-                btn.setMineVal(myMinesweeper.Field[btn.index]);
+                btn.setTileVal(myMinesweeper.Field[btn.index]);
+                if (btn.row != 0 || btn.col != 0)
+                { 
+                }
             }
         }
 
@@ -82,27 +90,30 @@ namespace NueralMinesweeper
         public UIMine(int newIndex, (int, int)rowCol)
         {
             this.Font = new Font("Arial", 12, FontStyle.Regular);
-            this.Height = sideLen;
-            this.Width = sideLen;
             this.BackColor = Color.LightBlue;
             this.FlatAppearance.MouseOverBackColor = Color.Gold;
             this.FlatStyle = FlatStyle.Flat;
 
             this.index = newIndex;
-            this.Text = (this.index + 1).ToString(); // Account for 0 index
+            this.Text = "0"; // Account for 0 index
             this.row = rowCol.Item1;
             this.col = rowCol.Item2;
+            this.Height = sideLen;
+            this.Width = sideLen;
             this.Location = new Point(row * sideLen + xOffset, col * sideLen + yOffset);
         }
         // public Mine Mine { set; get; }
-        public void setMineVal(int     val) { this.Text = val.ToString(); }
-        public void setMineVal(string text) { this.Text = text; } // For marking flags and bombs
+        public void setTileVal(int     val) { this.Text = val.ToString(); 
+            if (val == -1){ 
+                this.BackColor = Color.Red;
+            }}
+        public void setTileText(string text) { this.Text = text; } // For marking flags and bombs
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            GraphicsPath path = new GraphicsPath();
-            path.AddRectangle(new(0, 0, Width, Height));
-            Region = new(path);
+            //GraphicsPath path = new GraphicsPath();
+            //path.AddRectangle(new(0, 0, Width, Height));
+            //Region = new(path);
             base.OnPaint(e);
         }
     }

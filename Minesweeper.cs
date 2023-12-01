@@ -9,13 +9,21 @@ namespace NueralMinesweeper
 {
     public class Minefield : IComparable // Class to keep track of edges with consolidated methods
     {
-        private class Mine
+        private class Tile
         {
-            public Mine() {} // Null Node
-            public Mine(int newMineVal, int newRow, int newCol, int newIndex)
+            public Tile() { } // Null Tile
+            public Tile(int newRow, int newCol, int newIndex)
             {
-                mineVal = newMineVal; Row = newRow; Col = newCol; Index = newIndex;
-                if(mineVal == -1)
+                Row = newRow; Col = newCol; Index = newIndex;
+                if(tileVal == -1)
+                {
+                    isMine = true;
+                }
+            }
+            public Tile(int newTileVal, int newRow, int newCol, int newIndex) // If tileVal is known ahead of time
+            {
+                tileVal = newTileVal; Row = newRow; Col = newCol; Index = newIndex;
+                if (tileVal == -1)
                 {
                     isMine = true;
                 }
@@ -23,7 +31,7 @@ namespace NueralMinesweeper
             public bool isMine = false;
             public bool isCovered = true;
             public bool isFlagged = false;
-            public int mineVal = 0;
+            public int tileVal = 0;
             public double Row = -1, Col = -1, Index = -1;
             public override string ToString() => $"({Row}, {Col})";
         }
@@ -35,14 +43,14 @@ namespace NueralMinesweeper
         public readonly int moveCount;    // How many moves have been made on field
         public readonly int boomCount;    // How many mines have been hit
 
-        private List<Mine> field = new();
+        private List<Tile> field = new();
         private Random rng = new Random();
         public int this[int index]
         {
             get 
             {
                 if (field[index].isCovered){return 0;}
-                return field[index].mineVal;
+                return field[index].tileVal;
             }
         }
 
@@ -68,11 +76,16 @@ namespace NueralMinesweeper
                 int index = field.Count;
                 int x = index % width;
                 int y = index / height;
-                // Generate a random number between -2 and 8
-                field.Add(new(rng.Next(-2, 9), x, y, convertRowColtoIndex(x,y, width)));
+                field.Add(new(x, y, convertRowColtoIndex(x, y, width)));
             }
             fieldSize = field.Count;
             mineCount = newMinecount;
+            for (int i = 0; i < mineCount; i++)
+            {
+                int randMineIndex = rng.Next(fieldSize);
+                field[randMineIndex].isMine = true;
+                field[randMineIndex].tileVal = -1;
+            }
         }
         public void makeMove(int mineIndex)
         {
@@ -80,7 +93,8 @@ namespace NueralMinesweeper
             {
                 return;
             }
-            if (field[mineIndex].mineVal != -1)
+            // It is a covered tile
+            if (field[mineIndex].tileVal != -1)
             {
                 field[mineIndex].isCovered = false;
             }
