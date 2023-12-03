@@ -7,7 +7,7 @@ namespace NueralMinesweeper
 {
     public partial class Form1 : Form
     {
-        private Minesweeper myMinesweeper = new(0,0,0);
+        private Minefield myMinesweeper;
         readonly List<UIMine> uiMineList = new();
         Stopwatch myAlgStopWatch = new();
 
@@ -34,24 +34,29 @@ namespace NueralMinesweeper
             myMinesweeper = new(width, height, mineCount);
             //progressBar1.Value = 0;
             //TaskbarProgress.SetValue(this.Handle, 0, 1);
+
             foreach (UIMine uimine in uiMineList)
             {
                 uimine.Dispose();
             }
             uiMineList.Clear();
-            int tempCount = myMinesweeper.Field.fieldSize;
+
             myAlgStopWatch.Start();
-            for (int i = 0; i < tempCount; i++)
+
+            for (int i = 0; i < myMinesweeper.fieldSize; i++)
             {
-                UIMine button = new(i, myMinesweeper.Field.getRowCol(i));
+                UIMine button = new(i, myMinesweeper.getRowCol(i));
                 button.MouseUp += (sender, EventArgs) => { OnMineClick(sender, EventArgs); };
                 pictureBox1.Controls.Add(button);
                 uiMineList.Add(button);
-                myMinesweeper.Field.setTileValDel.Add(button.setTileVal);
+                myMinesweeper.setTileValDel.Add(button.setTileVal);
             }
+
+
             chart1.Series["Uncovered"].Points.Clear();
             //progressBar1.Maximum = myMinesweeper.Field.count
             pictureBox1.Invalidate();
+
             myAlgStopWatch.Stop();
             label1.Text = "Algorithm Completion \r\nTime (s): " + myAlgStopWatch.Elapsed.ToString("s'.'FFFFFFF");
         }
@@ -66,12 +71,12 @@ namespace NueralMinesweeper
                 {
                     if (button1.ClientRectangle.Contains(myMouseEventArgs.Location))
                     {
-                        myMinesweeper.Field.makeMove(btn.index);
+                        myMinesweeper.makeMove(btn.index);
                     }
                 }
                 else
                 {
-                    btn.toggleFlag(myMinesweeper.Field.toggleTileFlag(btn.index));
+                    btn.toggleFlag(myMinesweeper.toggleTileFlag(btn.index));
                 }
             }
         }
@@ -112,7 +117,7 @@ namespace NueralMinesweeper
             this.Location = new Point(row * sideLen + xOffset, col * sideLen + yOffset);
         }
         // public Mine Mine { set; get; }
-        public void setTileVal(int     val)
+        public void setTileVal(int val)
         {
             this.Text = val.ToString();
             if (val == -1)
@@ -135,12 +140,5 @@ namespace NueralMinesweeper
             else { this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperCoveredTile.png"); }
         }
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            //GraphicsPath path = new GraphicsPath();
-            //path.AddRectangle(new(0, 0, Width, Height));
-            //Region = new(path);
-            base.OnPaint(e);
-        }
     }
 }
