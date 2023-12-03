@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -93,18 +94,21 @@ namespace NueralMinesweeper
                 {
                     field[tileIndex].isCovered = false;
                     setTileValDel[tileIndex].DynamicInvoke(this[tileIndex]);
-                    (int, int) RowCol = getRowCol(tileIndex);
-                    int Row = RowCol.Item1, Col = RowCol.Item2;
-                    tryClearing(Row + 1, Col);     // Right
-                    tryClearing(Row + 1, Col + 1); // Down/Right
-                    tryClearing(Row,     Col + 1); // Down
+                    if (field[tileIndex].adjMineCnt == 0 && !field[tileIndex].isMine)
+                    {
+                        (int, int) RowCol = getRowCol(tileIndex);
+                        int Row = RowCol.Item1, Col = RowCol.Item2;
+                        tryClearing(Row + 1, Col);     // Right
+                        tryClearing(Row + 1, Col + 1); // Down/Right
+                        tryClearing(Row, Col + 1); // Down
 
-                    tryClearing(Row - 1, Col);     // Left
-                    tryClearing(Row - 1, Col - 1); // Up/Left
-                    tryClearing(Row,     Col - 1); // Up
+                        tryClearing(Row - 1, Col);     // Left
+                        tryClearing(Row - 1, Col - 1); // Up/Left
+                        tryClearing(Row, Col - 1); // Up
 
-                    tryClearing(Row + 1, Col - 1); // Up/Right
-                    tryClearing(Row - 1, Col + 1); // Down/Left
+                        tryClearing(Row + 1, Col - 1); // Up/Right
+                        tryClearing(Row - 1, Col + 1); // Down/Left
+                    }
                     return true;
                 }
                 return false;
@@ -146,7 +150,7 @@ namespace NueralMinesweeper
                 int index = getIndex(Row, Col);
                 if (index >= 0 && index < fieldSize && !field[index].isMine) // Ensure tile is on field and not a mine
                 {
-                        makeMove(index);
+                    makeMove(index);
                 }
             }
         }

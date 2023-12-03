@@ -15,7 +15,7 @@ namespace NueralMinesweeper
         {
             InitializeComponent();
             //WinNotif("Test");
-            StartNewGame(20, 20, 150);
+            StartNewGame(20, 20, 50);
         }
 
         // Function I made to create windows notifications, unused for now
