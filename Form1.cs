@@ -7,7 +7,7 @@ namespace NueralMinesweeper
 {
     public partial class Form1 : Form
     {
-        private Minesweeper? myMinesweeper;
+        private Minesweeper myMinesweeper = new(0,0,0);
         readonly List<UIMine> uiMineList = new();
         Stopwatch myAlgStopWatch = new();
 
@@ -15,7 +15,7 @@ namespace NueralMinesweeper
         {
             InitializeComponent();
             //WinNotif("Test");
-            StartNewGame(30, 30, 400);
+            StartNewGame(20, 20, 150);
         }
 
         // Function I made to create windows notifications, unused for now
@@ -44,11 +44,11 @@ namespace NueralMinesweeper
             for (int i = 0; i < tempCount; i++)
             {
                 UIMine button = new(i, myMinesweeper.Field.getRowCol(i));
-                button.Click += (sender, EventArgs) => { OnMineClick(sender, EventArgs, 1); };
+                button.MouseUp += (sender, EventArgs) => { OnMineClick(sender, EventArgs); };
                 pictureBox1.Controls.Add(button);
                 uiMineList.Add(button);
+                myMinesweeper.Field.setTileValDel.Add(button.setTileVal);
             }
-
             chart1.Series["Uncovered"].Points.Clear();
             //progressBar1.Maximum = myMinesweeper.Field.count
             pictureBox1.Invalidate();
@@ -56,13 +56,23 @@ namespace NueralMinesweeper
             label1.Text = "Algorithm Completion \r\nTime (s): " + myAlgStopWatch.Elapsed.ToString("s'.'FFFFFFF");
         }
 
-        void OnMineClick(object? sender, EventArgs e, int nodeIndex)
+        void OnMineClick(object? sender, EventArgs e)
         {
-            UIMine btn = sender as UIMine ?? throw new ArgumentException();
-            if(myMinesweeper != null)
+            MouseEventArgs myMouseEventArgs = (MouseEventArgs)e;
+            if (sender != null)
             {
-                myMinesweeper.Field.makeMove(btn.index);
-                btn.setTileVal(myMinesweeper.Field[btn.index]);
+                UIMine btn = (UIMine)sender;
+                if (myMouseEventArgs.Button == MouseButtons.Left)
+                {
+                    if (button1.ClientRectangle.Contains(myMouseEventArgs.Location))
+                    {
+                        myMinesweeper.Field.makeMove(btn.index);
+                    }
+                }
+                else
+                {
+                    btn.toggleFlag(myMinesweeper.Field.toggleTileFlag(btn.index));
+                }
             }
         }
 
@@ -109,14 +119,21 @@ namespace NueralMinesweeper
             {
                 this.BackColor = Color.Red;
                 this.Text = "";
-                this.BackgroundImage = Image.FromFile(@"..\..\..\Minesweeper_1992.png");
+                this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperMine.png");
             }
             else
             {
+                if (val == 0) { this.Text = ""; }
                 this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperUncoveredTile.png");
             }
         }
         public void setTileText(string text) { this.Text = text; } // For marking flags and bombs
+
+        public void toggleFlag(bool flag)
+        {
+            if (flag) { this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperFlag.png"); }
+            else { this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperCoveredTile.png"); }
+        }
 
         protected override void OnPaint(PaintEventArgs e)
         {
