@@ -29,9 +29,10 @@ namespace NueralMinesweeper
                 .Show();
         }
 
-        private void StartNewGame(int width, int height, int mineCount)
+        private void StartNewGame(int width, int height, int mineCount, bool multiLife = false)
         {
-            myMinesweeper = new(width, height, mineCount);
+                myMinesweeper = new(width, height, mineCount, multiLife);
+
             //progressBar1.Value = 0;
             //TaskbarProgress.SetValue(this.Handle, 0, 1);
 

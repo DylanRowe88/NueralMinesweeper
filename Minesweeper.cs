@@ -37,6 +37,8 @@ namespace NueralMinesweeper
         public readonly int boomCount;    // How many mines have been hit
 
         private bool gameStarted = false;
+        private int[] bombIndex;
+        private bool multiLife;
 
         private List<Tile> field = new();
         private static Random rng = new Random();
@@ -64,7 +66,7 @@ namespace NueralMinesweeper
             fieldSize = field.Count;
         }*/
 
-        public Minefield(int newWidth, int newHeight, int mineCount) // Create minefield with dimensions and minecount
+        public Minefield(int newWidth, int newHeight, int mineCount, bool multiLife = true) // Create minefield with dimensions and minecount
         {
             width = newWidth;
             height = newHeight;
@@ -80,6 +82,8 @@ namespace NueralMinesweeper
                 throw new Exception("Count != fieldSize");
             }
             this.mineCount = mineCount;
+            bombIndex = new int[mineCount];
+            this.multiLife = multiLife;
         }
         public bool makeMove(int tileIndex)
         {
@@ -91,6 +95,15 @@ namespace NueralMinesweeper
 
                 field[tileIndex].isCovered = false;
                 setTileValDel[tileIndex].DynamicInvoke(GetAdjCount(tileIndex));
+                if (field[tileIndex].isMine && !multiLife)
+                {
+                    for (int i = 0; i < mineCount; i++)
+                    {
+                        if (bombIndex[i] == tileIndex)
+                            continue;
+                        setTileValDel[bombIndex[i]].DynamicInvoke(GetAdjCount(bombIndex[i]));
+                    }
+                }
                 if (field[tileIndex].adjMineCnt == 0 && !field[tileIndex].isMine)
                 {
                     (int, int) RowCol = getRowCol(tileIndex);
@@ -115,6 +128,7 @@ namespace NueralMinesweeper
                         randMineIndex = rng.Next(fieldSize);
                     }
                     field[randMineIndex].isMine = true;
+                    bombIndex[i] = randMineIndex;
                     (int, int) RowCol = getRowCol(randMineIndex);
 
                     for (int j = -1; j <= 1; j++)
