@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Xml.Linq;
 
+using Windows.Storage.Provider;
+
 namespace NueralMinesweeper
 {
     public partial class Form1 : Form
@@ -46,11 +48,10 @@ namespace NueralMinesweeper
 
             for (int i = 0; i < myMinesweeper.fieldSize; i++)
             {
-                UIMine button = new(i, myMinesweeper.getRowCol(i));
+                UIMine button = new UIMine(i, myMinesweeper.getRowCol(i));
                 button.MouseUp += (sender, EventArgs) => { OnMineClick(sender, EventArgs); };
                 pictureBox1.Controls.Add(button);
                 uiMineList.Add(button);
-                myMinesweeper.setTileValDel.Add(button.setTileVal);
             }
 
 
@@ -73,12 +74,23 @@ namespace NueralMinesweeper
                     if (button1.ClientRectangle.Contains(myMouseEventArgs.Location))
                     {
                         myMinesweeper.makeMove(btn.index);
+                        UpdateUI(); 
                     }
                 }
                 else
                 {
                     btn.toggleFlag(myMinesweeper.toggleTileFlag(btn.index));
                 }
+            }
+        }
+
+        private void UpdateUI()
+        {
+            int[] f = myMinesweeper.GetFeild();
+            for(int i = 0; i < f.Length; i++) 
+            {
+                if(f[i] != -2)
+                uiMineList[i].setTileVal(f[i]);
             }
         }
 

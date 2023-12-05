@@ -42,7 +42,6 @@ namespace NueralMinesweeper
 
         private List<Tile> field = new();
         private static Random rng = new Random();
-        public List<Delegate> setTileValDel = new List<Delegate>();
 
 
         public int GetAdjCount(int index)
@@ -85,6 +84,11 @@ namespace NueralMinesweeper
             bombIndex = new int[mineCount];
             this.multiLife = multiLife;
         }
+        /// <summary>
+        /// Input index to uncover mine
+        /// </summary>
+        /// <param name="tileIndex"></param>
+        /// <returns></returns>
         public bool makeMove(int tileIndex)
         {
             if (gameStarted)
@@ -94,14 +98,15 @@ namespace NueralMinesweeper
                 
 
                 field[tileIndex].isCovered = false;
-                setTileValDel[tileIndex].DynamicInvoke(GetAdjCount(tileIndex));
+                //setTileValDel[tileIndex].DynamicInvoke(GetAdjCount(tileIndex));
                 if (field[tileIndex].isMine && !multiLife)
                 {
                     for (int i = 0; i < mineCount; i++)
                     {
-                        if (bombIndex[i] == tileIndex)
-                            continue;
-                        setTileValDel[bombIndex[i]].DynamicInvoke(GetAdjCount(bombIndex[i]));
+                        //if (bombIndex[i] != tileIndex)
+                            field[bombIndex[i]].isCovered = false;
+
+                        //setTileValDel[bombIndex[i]].DynamicInvoke(GetAdjCount(bombIndex[i]));
                     }
                 }
                 if (field[tileIndex].adjMineCnt == 0 && !field[tileIndex].isMine)
@@ -109,9 +114,7 @@ namespace NueralMinesweeper
                     (int, int) RowCol = getRowCol(tileIndex);
                     for (int j = -1; j <= 1; j++)
                         for (int k = -1; k <= 1; k++)
-                            if (j == 0 && k == 0)
-                                continue;
-                            else
+                            if (j != 0 || k != 0)
                                 tryClearing(RowCol.Item1 + j, RowCol.Item2 + k); //all
                 }
                 return true;
@@ -133,9 +136,7 @@ namespace NueralMinesweeper
 
                     for (int j = -1; j <= 1; j++)
                         for (int k = -1; k <= 1; k++)
-                            if (j == 0 && k == 0) 
-                                continue;
-                            else
+                            if (j != 0 || k != 0) 
                                 tryIncrement(RowCol.Item1 + j, RowCol.Item2+k);     // all
                 }
                 gameStarted = true;
@@ -145,16 +146,14 @@ namespace NueralMinesweeper
                     (int, int) RowCol = getRowCol(tileIndex);
                     for (int j = -1; j <= 1; j++)
                         for (int k = -1; k <= 1; k++)
-                            if (j == 0 && k == 0)
-                                continue;
-                            else
+                            if (j != 0 || k != 0)
                                 tryClearing(RowCol.Item1 + j, RowCol.Item2 + k); //all
                 }
-                setTileValDel[tileIndex].DynamicInvoke(GetAdjCount(tileIndex));
+                //setTileValDel[tileIndex].DynamicInvoke(GetAdjCount(tileIndex));
                 return true;
             }
         }
-        private void tryClearing(int Row, int Col, bool C = false)
+        private void tryClearing(int Row, int Col)
         {
             if ((Row <= height && Col <= height && Row >= 0 && Col >= 0) && (getIndex(Row, Col) >= 0 && getIndex(Row, Col) < fieldSize && !field[getIndex(Row, Col)].isMine))
                 makeMove(getIndex(Row, Col));
@@ -174,6 +173,20 @@ namespace NueralMinesweeper
                 else { return 0; }
             }
             return 1;
+        }
+        public int[] GetFeild()
+        {
+            List<int> arr = new();
+            foreach (Tile t in field)
+            {
+                if (t.isCovered)
+                    arr.Add(-2);
+                else if (t.isMine)
+                    arr.Add(-1);
+                else
+                    arr.Add(t.adjMineCnt);
+            }
+            return arr.ToArray();
         }
 
         public bool toggleTileFlag(int tileIndex) => (field[tileIndex].isCovered) ? field[tileIndex].isFlagged = !field[tileIndex].isFlagged : false;
