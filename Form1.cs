@@ -10,6 +10,8 @@ namespace NueralMinesweeper
     public partial class Form1 : Form
     {
         private List<Minefield> mineSweeperers;
+        private object comboBox2;
+
         //readonly List<UIMine> uiMineList = new();
         const int POP = 50;
         //readonly Stopwatch myAlgStopWatch = new();
@@ -110,7 +112,7 @@ namespace NueralMinesweeper
             //int[] f = myMinesweeper.GetFeild();
             //for (int i = 0; i < f.Length; i++)
             //{
-                // uiMineList[i].setTileVal(f[i]);
+            // uiMineList[i].setTileVal(f[i]);
             //}
         }
 
@@ -146,18 +148,26 @@ namespace NueralMinesweeper
 
         private void button3_Click(object sender, EventArgs e) // Import
         {
-            foreach (Minefield field in mineSweeperers)
+            string file = comboBox1.SelectedItem.ToString();
+            string text = File.ReadAllText(file); //Load File
+
+            for (int i = 0; i < numericUpDown1.Value; i++)
             {
-                field.Import(@"..\..\..\test.csv");
+                mineSweeperers[i].Import(@"..\..\..\nets\test.csv");
             }
         }
 
         private void button4_Click(object sender, EventArgs e) // Export
         {
-            foreach (Minefield field in mineSweeperers)
+            for(int i = 0; i < numericUpDown1.Value; i++)
             {
-                field.Export(@"..\..\..\test.csv");
+                mineSweeperers[i].Export(@"..\..\..\nets\test.csv");
             }
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
     // Created class inheriting Button to customize its shape

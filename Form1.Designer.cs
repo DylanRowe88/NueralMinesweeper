@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             panel1 = new Panel();
+            numericUpDown1 = new NumericUpDown();
+            button4 = new Button();
             button3 = new Button();
             button2 = new Button();
             label1 = new Label();
@@ -39,8 +41,9 @@
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             panel2 = new Panel();
             pictureBox1 = new PictureBox();
-            button4 = new Button();
+            comboBox1 = new ComboBox();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -48,6 +51,8 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(comboBox1);
+            panel1.Controls.Add(numericUpDown1);
             panel1.Controls.Add(button4);
             panel1.Controls.Add(button3);
             panel1.Controls.Add(button2);
@@ -59,6 +64,24 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(348, 880);
             panel1.TabIndex = 0;
+            // 
+            // numericUpDown1
+            // 
+            numericUpDown1.Location = new Point(153, 218);
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new Size(120, 23);
+            numericUpDown1.TabIndex = 6;
+            numericUpDown1.ValueChanged += numericUpDown1_ValueChanged;
+            // 
+            // button4
+            // 
+            button4.Location = new Point(53, 186);
+            button4.Name = "button4";
+            button4.Size = new Size(75, 23);
+            button4.TabIndex = 5;
+            button4.Text = "Export";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // button3
             // 
@@ -101,18 +124,18 @@
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            chart1.ChartAreas.Add(chartArea2);
-            legend2.Enabled = false;
-            legend2.Name = "Legend1";
-            chart1.Legends.Add(legend2);
+            chartArea1.Name = "ChartArea1";
+            chart1.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            chart1.Legends.Add(legend1);
             chart1.Location = new Point(21, 560);
             chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.IsXValueIndexed = true;
-            series2.Legend = "Legend1";
-            series2.Name = "Uncovered";
-            chart1.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.IsXValueIndexed = true;
+            series1.Legend = "Legend1";
+            series1.Name = "Uncovered";
+            chart1.Series.Add(series1);
             chart1.Size = new Size(300, 300);
             chart1.TabIndex = 0;
             chart1.Text = "chart1";
@@ -137,15 +160,13 @@
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
             // 
-            // button4
+            // comboBox1
             // 
-            button4.Location = new Point(53, 186);
-            button4.Name = "button4";
-            button4.Size = new Size(75, 23);
-            button4.TabIndex = 5;
-            button4.Text = "Export";
-            button4.UseVisualStyleBackColor = true;
-            button4.Click += button4_Click;
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(69, 271);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(121, 23);
+            comboBox1.TabIndex = 7;
             // 
             // Form1
             // 
@@ -158,6 +179,7 @@
             Text = "Form1";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
             panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -175,5 +197,7 @@
         private Button button2;
         private Button button3;
         private Button button4;
+        private NumericUpDown numericUpDown1;
+        private ComboBox comboBox1;
     }
 }
