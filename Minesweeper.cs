@@ -30,8 +30,6 @@
         public readonly int width, height;
         public readonly int fieldSize;    // Width * Height of field
         public readonly int mineCount;    // How many mines are in field
-        public readonly int uncoveredCount; // How many tiles have been uncovered
-        public readonly int moveCount;    // How many moves have been made on field
         public readonly int boomCount;    // How many mines have been hit
 
         private bool gameStarted;
@@ -39,7 +37,10 @@
         private int[] bombIndex;
         private bool multiLife;
         private int bombCount;
-        private int uncovered;
+        private int repeatTiles;
+        private int goodHits;
+        private int uncovered; // How many tiles have been uncovered
+        private int moveCount;  // How many moves have been made on field
 
         private List<Tile> field = new();
         private static Random rng = new Random();
@@ -55,7 +56,10 @@
         {
             net.Export(filePath);
         }
-
+        public int getNetLayerSize(int index)
+        {
+            return layers[index];
+        }
         public int GetAdjCount(int index)
         {
             if (field[index].isMine)
@@ -101,6 +105,8 @@
             bombCount = 0;
             gameStarted = false;
             uncovered = 0;
+            repeatTiles = 0;
+            moveCount = 0;
         }
 
         public Minefield(int newWidth, int newHeight, int mineCount,NeuralNetwork Net, bool multiLife = true) // Create minefield with dimensions and minecount
@@ -127,12 +133,15 @@
             bombCount = 0;
             gameStarted = false;
             uncovered = 0;
+            repeatTiles = 0;
+            moveCount = 0;
         }
 
         internal void Reset()
         {
             uncovered = 0;
-
+            repeatTiles = 0;
+            moveCount = 0;
             gameStarted = false;
             gameFinished = false;
             bombCount = 0;
@@ -237,6 +246,7 @@
         {
             var x = net.FeedForward(GetFeildF()).ToList();
             int index = x.IndexOf(x.Max());
+            moveCount++;
             while (!makeMove(index))
             {
                 if(gameFinished)
@@ -244,11 +254,18 @@
                 x[index] = float.NegativeInfinity;
                 index = x.IndexOf(x.Max());
                 net.AddFitness(-10);
+                repeatTiles++;
+                moveCount++;
             }
             if (field[index].isMine)
+            {
                 net.AddFitness(-1000);
+            }
             else
+            {
                 net.AddFitness(100);
+                goodHits++;
+            }
             return true;
         }
         public float GetFitness()
@@ -259,7 +276,22 @@
         {
             while (ItterateNet()) ;
         }
-
+        public int GetBombsHit()
+        {
+            return bombCount;
+        }
+        public int getRepeatTiles()
+        {
+            return repeatTiles;
+        }
+        public int getGoodHits()
+        {
+            return goodHits;
+        }
+        public int getUncovered()
+        {
+            return uncovered;
+        }
         public void Mutate()
         {
             net.Mutate();
@@ -320,7 +352,7 @@
 
         public bool toggleTileFlag(int tileIndex) => (field[tileIndex].isCovered) ? field[tileIndex].isFlagged = !field[tileIndex].isFlagged : false;
 
-        public double RatioUncovered() => uncoveredCount / field.Count;
+        public double RatioUncovered() => uncovered / field.Count;
 
 
         public (int, int) getRowCol(int index) => (index / width, index % width);

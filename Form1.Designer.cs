@@ -28,10 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             panel1 = new Panel();
+            label5 = new Label();
+            label4 = new Label();
+            label3 = new Label();
+            label2 = new Label();
             comboBox1 = new ComboBox();
             numericUpDown1 = new NumericUpDown();
             button4 = new Button();
@@ -42,6 +46,7 @@
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             panel2 = new Panel();
             pictureBox1 = new PictureBox();
+            label6 = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
@@ -51,6 +56,11 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(label6);
+            panel1.Controls.Add(label5);
+            panel1.Controls.Add(label4);
+            panel1.Controls.Add(label3);
+            panel1.Controls.Add(label2);
             panel1.Controls.Add(comboBox1);
             panel1.Controls.Add(numericUpDown1);
             panel1.Controls.Add(button4);
@@ -65,25 +75,61 @@
             panel1.Size = new Size(348, 880);
             panel1.TabIndex = 0;
             // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(25, 202);
+            label5.Name = "label5";
+            label5.Size = new Size(63, 15);
+            label5.TabIndex = 11;
+            label5.Text = "Good Hits:";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(25, 176);
+            label4.Name = "label4";
+            label4.Size = new Size(72, 15);
+            label4.TabIndex = 10;
+            label4.Text = "Repeat Tiles:";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(25, 150);
+            label3.Name = "label3";
+            label3.Size = new Size(66, 15);
+            label3.TabIndex = 9;
+            label3.Text = "Bombs Hit:";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(25, 117);
+            label2.Name = "label2";
+            label2.Size = new Size(36, 15);
+            label2.TabIndex = 8;
+            label2.Text = "Time:";
+            // 
             // comboBox1
             // 
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(69, 271);
+            comboBox1.Location = new Point(25, 271);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(121, 23);
+            comboBox1.Size = new Size(296, 23);
             comboBox1.TabIndex = 7;
             // 
             // numericUpDown1
             // 
-            numericUpDown1.Location = new Point(153, 218);
+            numericUpDown1.Location = new Point(277, 242);
             numericUpDown1.Name = "numericUpDown1";
-            numericUpDown1.Size = new Size(120, 23);
+            numericUpDown1.Size = new Size(44, 23);
             numericUpDown1.TabIndex = 6;
             numericUpDown1.ValueChanged += numericUpDown1_ValueChanged;
             // 
             // button4
             // 
-            button4.Location = new Point(53, 186);
+            button4.Location = new Point(182, 242);
             button4.Name = "button4";
             button4.Size = new Size(75, 23);
             button4.TabIndex = 5;
@@ -93,7 +139,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(53, 146);
+            button3.Location = new Point(182, 202);
             button3.Name = "button3";
             button3.Size = new Size(75, 23);
             button3.TabIndex = 4;
@@ -116,9 +162,9 @@
             label1.AutoSize = true;
             label1.Location = new Point(25, 83);
             label1.Name = "label1";
-            label1.Size = new Size(39, 15);
+            label1.Size = new Size(60, 15);
             label1.TabIndex = 2;
-            label1.Text = "Time: ";
+            label1.Text = "Max: Min:";
             // 
             // button1
             // 
@@ -132,18 +178,18 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            chart1.ChartAreas.Add(chartArea1);
-            legend1.Enabled = false;
-            legend1.Name = "Legend1";
-            chart1.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            chart1.ChartAreas.Add(chartArea2);
+            legend2.Enabled = false;
+            legend2.Name = "Legend1";
+            chart1.Legends.Add(legend2);
             chart1.Location = new Point(21, 560);
             chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.IsXValueIndexed = true;
-            series1.Legend = "Legend1";
-            series1.Name = "Uncovered";
-            chart1.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.IsXValueIndexed = true;
+            series2.Legend = "Legend1";
+            series2.Name = "Uncovered";
+            chart1.Series.Add(series2);
             chart1.Size = new Size(300, 300);
             chart1.TabIndex = 0;
             chart1.Text = "chart1";
@@ -167,6 +213,15 @@
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(28, 226);
+            label6.Name = "label6";
+            label6.Size = new Size(67, 15);
+            label6.TabIndex = 12;
+            label6.Text = "Uncovered:";
             // 
             // Form1
             // 
@@ -200,5 +255,10 @@
         private Button button4;
         private NumericUpDown numericUpDown1;
         private ComboBox comboBox1;
+        private Label label2;
+        private Label label3;
+        private Label label4;
+        private Label label5;
+        private Label label6;
     }
 }
