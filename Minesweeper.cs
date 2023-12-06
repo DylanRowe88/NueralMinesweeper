@@ -39,6 +39,7 @@
         private int[] bombIndex;
         private bool multiLife;
         private int bombCount;
+        private int uncovered;
 
         private List<Tile> field = new();
         private static Random rng = new Random();
@@ -91,10 +92,13 @@
             gameFinished = false;
             bombCount = 0;
             gameStarted = false;
+            uncovered = 0;
         }
 
         internal void Reset()
         {
+            uncovered = 0;
+
             gameStarted = false;
             gameFinished = false;
             bombCount = 0;
@@ -148,6 +152,14 @@
                             if (j != 0 || k != 0)
                                 tryClearing(RowCol.Item1 + j, RowCol.Item2 + k); //all
                 }
+                uncovered++;
+                if (uncovered >= fieldSize - mineCount && !multiLife)
+                {
+                    gameFinished = true;
+                }
+                if(multiLife)
+                    if(uncovered >= fieldSize+mineCount-bombCount)
+                        gameFinished=true;
                 return true;
 
             }
@@ -181,6 +193,8 @@
                                 tryClearing(RowCol.Item1 + j, RowCol.Item2 + k); //all
                 }
                 //setTileValDel[tileIndex].DynamicInvoke(GetAdjCount(tileIndex));
+                uncovered++;
+
                 return true;
             }
         }
@@ -195,8 +209,21 @@
                     return false;
                 x[index] = float.NegativeInfinity;
                 index = x.IndexOf(x.Max());
+                net.AddFitness(-10);
             }
+            if (field[index].isMine)
+                net.AddFitness(-1000);
+            else
+                net.AddFitness(100);
             return true;
+        }
+        public float GetFitness()
+        {
+            return net.GetFitness();
+        }
+        public void CompleteGame()
+        {
+            while (ItterateNet()) ;
         }
 
         public void Mutate()

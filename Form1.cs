@@ -9,15 +9,21 @@ namespace NueralMinesweeper
 {
     public partial class Form1 : Form
     {
-        private Minefield myMinesweeper;
+        private Minefield[] mineSweeperers;
         readonly List<UIMine> uiMineList = new();
+        const int POP = 10;
         Stopwatch myAlgStopWatch = new();
 
         public Form1()
         {
             InitializeComponent();
-            //WinNotif("Test");
-            StartNewGame(20, 20, 50);
+            mineSweeperers = new Minefield[POP];
+            for (int i = 0; i < POP; i++)
+            {
+                mineSweeperers[i] = new(20, 20, 50, true);
+                mineSweeperers[i].CompleteGame();
+            }
+            label1.Text = $"MAX: {mineSweeperers.Max(sweeper => sweeper.GetFitness())}, Min: {mineSweeperers.Min(sweeper => sweeper.GetFitness())}";
         }
 
         // Function I made to create windows notifications, unused for now
@@ -31,6 +37,7 @@ namespace NueralMinesweeper
                 .Show();
         }
 
+        /*
         private void StartNewGame(int width, int height, int mineCount, bool multiLife = false)
         {
             myMinesweeper = new(width, height, mineCount, multiLife);
@@ -62,6 +69,7 @@ namespace NueralMinesweeper
             myAlgStopWatch.Stop();
             label1.Text = "Algorithm Completion \r\nTime (s): " + myAlgStopWatch.Elapsed.ToString("s'.'FFFFFFF");
         }
+        */
 
         void OnMineClick(object? sender, EventArgs e)
         {
@@ -73,23 +81,23 @@ namespace NueralMinesweeper
                 {
                     if (button1.ClientRectangle.Contains(myMouseEventArgs.Location))
                     {
-                        myMinesweeper.makeMove(btn.index);
+                        //myMinesweeper.makeMove(btn.index);
                         UpdateUI();
                     }
                 }
                 else
                 {
-                    btn.toggleFlag(myMinesweeper.toggleTileFlag(btn.index));
+                    //btn.toggleFlag(myMinesweeper.toggleTileFlag(btn.index));
                 }
             }
         }
 
         private void UpdateUI()
         {
-            int[] f = myMinesweeper.GetFeild();
-            for (int i = 0; i < f.Length; i++)
+            //int[] f = myMinesweeper.GetFeild();
+            //for (int i = 0; i < f.Length; i++)
             {
-                uiMineList[i].setTileVal(f[i]);
+               // uiMineList[i].setTileVal(f[i]);
             }
         }
 
@@ -103,14 +111,14 @@ namespace NueralMinesweeper
 
         private void button1_Click(object sender, EventArgs e)
         {
-            while (myMinesweeper.ItterateNet())
+            //while (myMinesweeper.ItterateNet())
             {
                 label1.Text = "running";
                 UpdateUI();
                 Thread.Sleep(100);
             }
             UpdateUI();
-            myMinesweeper.Mutate();
+            //myMinesweeper.Mutate();
             label1.Text = "done";
             
 
@@ -118,7 +126,7 @@ namespace NueralMinesweeper
 
         private void button2_Click(object sender, EventArgs e)
         {
-            myMinesweeper.Reset();
+            //myMinesweeper.Reset();
             UpdateUI();
 
         }
