@@ -10,8 +10,8 @@ namespace NueralMinesweeper
         private List<Minefield> mineSweeperers;
         private object comboBox2;
 
-        //readonly List<UIMine> uiMineList = new();
-        const int POP = 10;
+        readonly List<UIMine> uiMineList = new();
+        const int POP = 1;
         Stopwatch myAlgStopWatch = new();
         Task Gening;
         const int FIELDSIZE = 20;
@@ -90,8 +90,40 @@ namespace NueralMinesweeper
 
         private void UpdateUI(double max = -1, double min = -1)
         {
-            label1.Text = $"MAX: {max}, Min: {min}";
+            mineSweeperers.Sort();
+            label1.Text = $"MAX: {mineSweeperers[0].GetFitness()}, Min: {min}";
+            label3.Text = "Bombs Hit: " + mineSweeperers[0].GetBombsHit();
+            label4.Text = "Repeat Tiles: " + mineSweeperers[0].getRepeatTiles();
+            label5.Text = "Good Hits: " + mineSweeperers[0].getGoodHits();
+            label6.Text = "Uncovered: " + mineSweeperers[0].getUncovered();
+            //progressBar1.Value = 0;
+            //TaskbarProgress.SetValue(this.Handle, 0, 1);
 
+            foreach (UIMine uimine in uiMineList)
+            {
+                uimine.Dispose();
+            }
+            uiMineList.Clear();
+
+
+            int[] UIfield = mineSweeperers[0].GetFeild();
+            for (int i = 0; i < mineSweeperers[0].fieldSize; i++)
+            {
+                UIMine button = new UIMine(i, mineSweeperers[0].getRowCol(i));
+                button.setTileVal(UIfield[i]);
+                //button.MouseUp += (sender, EventArgs) => { OnMineClick(sender, EventArgs); };
+                pictureBox1.Controls.Add(button);
+                uiMineList.Add(button);
+            }
+
+
+            //chart1.Series["Uncovered"].Points.Clear();
+            //progressBar1.Maximum = myMinesweeper.Field.count
+            pictureBox1.Invalidate();
+
+            myAlgStopWatch.Start();
+            myAlgStopWatch.Stop();
+            label2.Text = "Algorithm Completion \r\nTime (s): " + myAlgStopWatch.Elapsed.ToString("s'.'FFFFFFF");
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -107,15 +139,12 @@ namespace NueralMinesweeper
             await Gen();
             mineSweeperers.Sort();
             this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
-
-
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             //myMinesweeper.Reset();
             this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
-
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -196,8 +225,8 @@ namespace NueralMinesweeper
         private void button3_Click(object sender, EventArgs e) // Import
         {
             if (Gening != Task.CompletedTask || comboBox1.SelectedItem.ToString() == null){return;}
-            string file = comboBox1.SelectedItem.ToString();
-            mineSweeperers[(int)numericUpDown1.Value].Import(file);
+            string filepath = comboBox1.SelectedItem.ToString();
+            mineSweeperers[(int)numericUpDown1.Value].Import(filepath);
 
             //for (int i = 0; i < numericUpDown1.Value; i++)
             //{
@@ -211,7 +240,12 @@ namespace NueralMinesweeper
 
             for (int i = 0; i < numericUpDown1.Value; i++)
             {
-                mineSweeperers[i].Export(@"..\..\..\nets\test.csv");
+                mineSweeperers[i].Export(@"..\..\..\nets\"
+                + mineSweeperers[i].getNetLayerSize(0).ToString() + "-"
+                + mineSweeperers[i].getNetLayerSize(1).ToString() + "-"
+                + mineSweeperers[i].getNetLayerSize(2).ToString() + "-"
+                + mineSweeperers[i].getNetLayerSize(3).ToString() + "_"
+                + (i+1) + "_" + mineSweeperers[i].GetFitness() + ".csv");
             }
             comboBox1.Items.AddRange(Directory.GetFiles(@"../../../nets"));
         }
@@ -237,7 +271,7 @@ namespace NueralMinesweeper
         public readonly int xOffset = 20;
         public readonly int yOffset = 20;
 
-    public UIMine(int newIndex, (int, int) rowCol)
+    public UIMine(int Index, (int, int) rowCol)
     {
         this.Font = new Font("Arial", 12, FontStyle.Regular);
         this.BackColor = Color.LightBlue;
@@ -245,7 +279,7 @@ namespace NueralMinesweeper
         this.FlatStyle = FlatStyle.Flat;
         this.BackgroundImageLayout = ImageLayout.Stretch;
 
-        this.index = newIndex;
+        this.index = Index;
         this.Text = ""; // Account for 0 index
         this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperCoveredTile.png");
         this.row = rowCol.Item1;

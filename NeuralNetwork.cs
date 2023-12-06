@@ -27,7 +27,7 @@ namespace NueralMinesweeper
             InitNeurons();
             InitWeights();
 
-
+            fitness = 0;
         }
 
         public NeuralNetwork(NeuralNetwork copyNetwork)
@@ -43,6 +43,8 @@ namespace NueralMinesweeper
             InitNeurons();
             InitWeights();
             CopyWeights(copyNetwork.weights);
+
+            fitness = 0;
         }
 
         public void Import(string filePath) { weights = ImportFromCSV(filePath); }

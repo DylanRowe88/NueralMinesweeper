@@ -32,8 +32,6 @@ namespace NueralMinesweeper
         public readonly int width, height;
         public readonly int fieldSize;    // Width * Height of field
         public readonly int mineCount;    // How many mines are in field
-        public readonly int uncoveredCount; // How many tiles have been uncovered
-        public readonly int moveCount;    // How many moves have been made on field
         public readonly int boomCount;    // How many mines have been hit
 
         private bool gameStarted;
@@ -41,7 +39,10 @@ namespace NueralMinesweeper
         private int[] bombIndex;
         private bool multiLife;
         private int bombCount;
-        private int uncovered;
+        private int repeatTiles;
+        private int goodHits;
+        private int uncovered; // How many tiles have been uncovered
+        private int moveCount;  // How many moves have been made on field
 
         private List<Tile> field = new();
         private static Random rng = new Random();
@@ -57,7 +58,10 @@ namespace NueralMinesweeper
         {
             net.Export(filePath);
         }
-
+        public int getNetLayerSize(int index)
+        {
+            return layers[index];
+        }
         public int GetAdjCount(int index)
         {
             if (field[index].isMine)
@@ -103,6 +107,8 @@ namespace NueralMinesweeper
             bombCount = 0;
             gameStarted = false;
             uncovered = 0;
+            repeatTiles = 0;
+            moveCount = 0;
         }
 
         public Minefield(int newWidth, int newHeight, int mineCount,NeuralNetwork Net, bool multiLife = true) // Create minefield with dimensions and minecount
@@ -129,29 +135,25 @@ namespace NueralMinesweeper
             bombCount = 0;
             gameStarted = false;
             uncovered = 0;
+            repeatTiles = 0;
+            moveCount = 0;
         }
 
         internal void Reset()
         {
-            
-                uncovered = 0;
-
-                gameStarted = false;
-                gameFinished = false;
-                bombCount = 0;
-                bombIndex = new int[mineCount];
-                //foreach(Tile t in field)
-
-                field.Clear();
-                for (int i = 0; i < width * height; i++)
-                {
-                    int x = field.Count % width;
-                    int y = field.Count / height;
-                    field.Add(new Tile(x, y, getIndex(x, y)));
-                }
-            if (fieldSize != field.Count)
+            uncovered = 0;
+            repeatTiles = 0;
+            moveCount = 0;
+            gameStarted = false;
+            gameFinished = false;
+            bombCount = 0;
+            bombIndex = new int[mineCount];
+            field.Clear();
+            for (int i = 0; i < width * height; i++)
             {
-                throw new Exception("Count != fieldSize");
+                int x = field.Count % width;
+                int y = field.Count / height;
+                field.Add(new Tile(x, y, getIndex(x, y)));
             }
         }
         /// <summary>
@@ -247,6 +249,7 @@ namespace NueralMinesweeper
             
             var x = net.FeedForward(GetFeildF()).ToList();
             int index = x.IndexOf(x.Max());
+            moveCount++;
             while (!makeMove(index))
             {
                 if (gameFinished)
@@ -260,11 +263,18 @@ namespace NueralMinesweeper
                 x[index] = float.NegativeInfinity;
                 index = x.IndexOf(x.Max());
                 net.AddFitness(-10);
+                repeatTiles++;
+                moveCount++;
             }
             if (field[index].isMine)
+            {
                 net.AddFitness(-1000);
+            }
             else
+            {
                 net.AddFitness(100);
+                goodHits++;
+            }
             return true;
         }
         public float GetFitness()
@@ -275,7 +285,22 @@ namespace NueralMinesweeper
         {
             while (ItterateNet()) ;
         }
-
+        public int GetBombsHit()
+        {
+            return bombCount;
+        }
+        public int getRepeatTiles()
+        {
+            return repeatTiles;
+        }
+        public int getGoodHits()
+        {
+            return goodHits;
+        }
+        public int getUncovered()
+        {
+            return uncovered;
+        }
         public void Mutate()
         {
             net.Mutate();
@@ -336,7 +361,7 @@ namespace NueralMinesweeper
 
         public bool toggleTileFlag(int tileIndex) => (field[tileIndex].isCovered) ? field[tileIndex].isFlagged = !field[tileIndex].isFlagged : false;
 
-        public double RatioUncovered() => uncoveredCount / field.Count;
+        public double RatioUncovered() => uncovered / field.Count;
 
 
         public (int, int) getRowCol(int index) => (index / width, index % width);
