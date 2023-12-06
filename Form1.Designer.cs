@@ -37,6 +37,7 @@
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             panel2 = new Panel();
             pictureBox1 = new PictureBox();
+            button2 = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
             panel2.SuspendLayout();
@@ -45,6 +46,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(button2);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(button1);
             panel1.Controls.Add(chart1);
@@ -71,6 +73,7 @@
             button1.TabIndex = 1;
             button1.Text = "button1";
             button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // chart1
             // 
@@ -110,6 +113,16 @@
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
             // 
+            // button2
+            // 
+            button2.Location = new Point(166, 41);
+            button2.Name = "button2";
+            button2.Size = new Size(75, 23);
+            button2.TabIndex = 3;
+            button2.Text = "button2";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -135,5 +148,6 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private Button button1;
         private Label label1;
+        private Button button2;
     }
 }

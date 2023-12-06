@@ -33,7 +33,7 @@ namespace NueralMinesweeper
 
         private void StartNewGame(int width, int height, int mineCount, bool multiLife = false)
         {
-                myMinesweeper = new(width, height, mineCount, multiLife);
+            myMinesweeper = new(width, height, mineCount, multiLife);
 
             //progressBar1.Value = 0;
             //TaskbarProgress.SetValue(this.Handle, 0, 1);
@@ -74,7 +74,7 @@ namespace NueralMinesweeper
                     if (button1.ClientRectangle.Contains(myMouseEventArgs.Location))
                     {
                         myMinesweeper.makeMove(btn.index);
-                        UpdateUI(); 
+                        UpdateUI();
                     }
                 }
                 else
@@ -87,9 +87,8 @@ namespace NueralMinesweeper
         private void UpdateUI()
         {
             int[] f = myMinesweeper.GetFeild();
-            for(int i = 0; i < f.Length; i++) 
+            for (int i = 0; i < f.Length; i++)
             {
-                if(f[i] != -2)
                 uiMineList[i].setTileVal(f[i]);
             }
         }
@@ -100,6 +99,28 @@ namespace NueralMinesweeper
             myGraphics.Clear(Color.White);
             myGraphics.SmoothingMode = SmoothingMode.AntiAlias;
             //myGraphics.DrawLine(new Pen(Brushes.Blue, 3), 0, 0, 0, 0);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            while (myMinesweeper.ItterateNet())
+            {
+                label1.Text = "running";
+                UpdateUI();
+                Thread.Sleep(100);
+            }
+            UpdateUI();
+            myMinesweeper.Mutate();
+            label1.Text = "done";
+            
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            myMinesweeper.Reset();
+            UpdateUI();
+
         }
     }
     // Created class inheriting Button to customize its shape
@@ -138,6 +159,11 @@ namespace NueralMinesweeper
                 this.BackColor = Color.Red;
                 this.Text = "";
                 this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperMine.png");
+            }
+            else if (val == -2)
+            {
+                this.Text = ""; // Account for 0 index
+                this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperCoveredTile.png");
             }
             else
             {

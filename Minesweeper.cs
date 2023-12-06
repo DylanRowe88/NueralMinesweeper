@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace NueralMinesweeper
+﻿namespace NueralMinesweeper
 {
     public class Minefield : IComparable // Class to keep track of edges with consolidated methods
     {
@@ -36,12 +34,17 @@ namespace NueralMinesweeper
         public readonly int moveCount;    // How many moves have been made on field
         public readonly int boomCount;    // How many mines have been hit
 
-        private bool gameStarted = false;
+        private bool gameStarted;
+        private bool gameFinished;
         private int[] bombIndex;
         private bool multiLife;
+        private int bombCount;
 
         private List<Tile> field = new();
         private static Random rng = new Random();
+
+        private int[] layers;
+        private NeuralNetwork net;
 
 
         public int GetAdjCount(int index)
@@ -83,6 +86,26 @@ namespace NueralMinesweeper
             this.mineCount = mineCount;
             bombIndex = new int[mineCount];
             this.multiLife = multiLife;
+            layers = new int[] { fieldSize, 5 * fieldSize, 5 * fieldSize, fieldSize };
+            net = new(layers);
+            gameFinished = false;
+            bombCount = 0;
+            gameStarted = false;
+        }
+
+        internal void Reset()
+        {
+            gameStarted = false;
+            gameFinished = false;
+            bombCount = 0;
+            bombIndex = new int[mineCount];
+            field.Clear();
+            for (int i = 0; i < width * height; i++)
+            {
+                int x = field.Count % width;
+                int y = field.Count / height;
+                field.Add(new Tile(x, y, getIndex(x, y)));
+            }
         }
         /// <summary>
         /// Input index to uncover mine
@@ -91,23 +114,31 @@ namespace NueralMinesweeper
         /// <returns></returns>
         public bool makeMove(int tileIndex)
         {
+            if (gameFinished)
+                return false;
             if (gameStarted)
             {
                 if (!field[tileIndex].isCovered || field[tileIndex].isFlagged) // Already uncovered?
                     return false;
-                
+
 
                 field[tileIndex].isCovered = false;
                 //setTileValDel[tileIndex].DynamicInvoke(GetAdjCount(tileIndex));
-                if (field[tileIndex].isMine && !multiLife)
+                if (field[tileIndex].isMine)
                 {
-                    for (int i = 0; i < mineCount; i++)
-                    {
-                        //if (bombIndex[i] != tileIndex)
+                    bombCount++;
+                    if (!multiLife)
+                        for (int i = 0; i < mineCount; i++)
+                        {
+                            //if (bombIndex[i] != tileIndex)
                             field[bombIndex[i]].isCovered = false;
-
-                        //setTileValDel[bombIndex[i]].DynamicInvoke(GetAdjCount(bombIndex[i]));
-                    }
+                            gameFinished = true;
+                            //setTileValDel[bombIndex[i]].DynamicInvoke(GetAdjCount(bombIndex[i]));
+                            //return true;
+                        }
+                    if (bombCount == mineCount)
+                        gameFinished = true;
+                    return false;
                 }
                 if (field[tileIndex].adjMineCnt == 0 && !field[tileIndex].isMine)
                 {
@@ -136,8 +167,8 @@ namespace NueralMinesweeper
 
                     for (int j = -1; j <= 1; j++)
                         for (int k = -1; k <= 1; k++)
-                            if (j != 0 || k != 0) 
-                                tryIncrement(RowCol.Item1 + j, RowCol.Item2+k);     // all
+                            if (j != 0 || k != 0)
+                                tryIncrement(RowCol.Item1 + j, RowCol.Item2 + k);     // all
                 }
                 gameStarted = true;
                 field[tileIndex].isCovered = false;
@@ -153,6 +184,25 @@ namespace NueralMinesweeper
                 return true;
             }
         }
+
+        public bool ItterateNet()
+        {
+            var x = net.FeedForward(GetFeildF()).ToList();
+            int index = x.IndexOf(x.Max());
+            while (!makeMove(index))
+            {
+                if(gameFinished)
+                    return false;
+                x[index] = float.NegativeInfinity;
+                index = x.IndexOf(x.Max());
+            }
+            return true;
+        }
+
+        public void Mutate()
+        {
+            net.Mutate();
+        }
         private void tryClearing(int Row, int Col)
         {
             if ((Row <= height && Col <= height && Row >= 0 && Col >= 0) && (getIndex(Row, Col) >= 0 && getIndex(Row, Col) < fieldSize && !field[getIndex(Row, Col)].isMine))
@@ -161,7 +211,7 @@ namespace NueralMinesweeper
         private void tryIncrement(int Row, int Col)
         {
             if ((Row <= height && Col <= height && Row >= 0 && Col >= 0) && (getIndex(Row, Col) >= 0 && getIndex(Row, Col) < fieldSize && !field[getIndex(Row, Col)].isMine))
-                field[getIndex(Row, Col)].adjMineCnt++;   
+                field[getIndex(Row, Col)].adjMineCnt++;
         }
 
         public int CompareTo(object? obj)
@@ -189,6 +239,21 @@ namespace NueralMinesweeper
             return arr.ToArray();
         }
 
+        public float[] GetFeildF()
+        {
+            List<float> arr = new();
+            foreach (Tile t in field)
+            {
+                if (t.isCovered)
+                    arr.Add(1);
+                else if (t.isMine)
+                    arr.Add(.9f);
+                else
+                    arr.Add(t.adjMineCnt/10.0f);
+            }
+            return arr.ToArray();
+        }
+
         public bool toggleTileFlag(int tileIndex) => (field[tileIndex].isCovered) ? field[tileIndex].isFlagged = !field[tileIndex].isFlagged : false;
 
         public double RatioUncovered() => uncoveredCount / field.Count;
@@ -196,6 +261,7 @@ namespace NueralMinesweeper
 
         public (int, int) getRowCol(int index) => (index / width, index % width);
         public int getIndex(int row, int col) => (row > height - 1 || col > width - 1 || row < 0 || col < 0 || row * col >= fieldSize) ? -1 : row * width + col;
+
         
     }
 
