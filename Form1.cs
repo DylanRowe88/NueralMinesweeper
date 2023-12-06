@@ -124,6 +124,9 @@ namespace NueralMinesweeper
 
             await gen;
             Gening = Task.CompletedTask;
+
+            var files = Directory.GetFiles(@"../../../nets");
+            comboBox1.Items.AddRange(files);
         }
 
         private async void GenerateAI()
@@ -192,21 +195,25 @@ namespace NueralMinesweeper
 
         private void button3_Click(object sender, EventArgs e) // Import
         {
+            if (Gening != Task.CompletedTask || comboBox1.SelectedItem.ToString() == null){return;}
             string file = comboBox1.SelectedItem.ToString();
-            string text = File.ReadAllText(file); //Load File
+            mineSweeperers[(int)numericUpDown1.Value].Import(file);
 
-            for (int i = 0; i < numericUpDown1.Value; i++)
-            {
-                mineSweeperers[i].Import(@"..\..\..\nets\test.csv");
-            }
+            //for (int i = 0; i < numericUpDown1.Value; i++)
+            //{
+            //    mineSweeperers[i].Import(@"..\..\..\nets\test.csv");
+            //}
         }
 
         private void button4_Click(object sender, EventArgs e) // Export
         {
-            for(int i = 0; i < numericUpDown1.Value; i++)
+            if (Gening != Task.CompletedTask || numericUpDown1.Value < 1) { return; }
+
+            for (int i = 0; i < numericUpDown1.Value; i++)
             {
                 mineSweeperers[i].Export(@"..\..\..\nets\test.csv");
             }
+            comboBox1.Items.AddRange(Directory.GetFiles(@"../../../nets"));
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
