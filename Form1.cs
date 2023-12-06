@@ -8,7 +8,7 @@ namespace NueralMinesweeper
     public partial class Form1 : Form
     {
         private List<Minefield> mineSweeperers;
-        readonly List<UIMine> uiMineList = new();
+        //readonly List<UIMine> uiMineList = new();
         const int POP = 50;
         Stopwatch myAlgStopWatch = new();
         Task Gening;
@@ -198,6 +198,33 @@ class UIMine : Button
     public readonly int col = -1;
     public readonly int xOffset = 20;
     public readonly int yOffset = 20;
+        }
+
+        private void button3_Click(object sender, EventArgs e) // Import
+        {
+            foreach (Minefield field in mineSweeperers)
+            {
+                field.Import(@"..\..\..\test.csv");
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e) // Export
+        {
+            foreach (Minefield field in mineSweeperers)
+            {
+                field.Export(@"..\..\..\test.csv");
+            }
+        }
+    }
+    // Created class inheriting Button to customize its shape
+    class UIMine : Button
+    {
+        public readonly int sideLen = 35; // Field is made of squares...
+        public readonly int index = -1;
+        public readonly int row = -1;
+        public readonly int col = -1;
+        public readonly int xOffset = 20;
+        public readonly int yOffset = 20;
 
     public UIMine(int newIndex, (int, int) rowCol)
     {

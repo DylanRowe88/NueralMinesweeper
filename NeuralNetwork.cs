@@ -9,11 +9,11 @@ namespace NueralMinesweeper
     public class NeuralNetwork
     {
         public int[] layers;
-        public float[][] neurons;
-        public float[][][] weights;
+        public float[][] neurons = Array.Empty<float[]>();
+        public float[][][] weights = Array.Empty<float[][]>();
         private float fitness;
 
-        private static Random rand = new Random();
+        private static readonly Random rand = new();
 
 
         
@@ -40,6 +40,95 @@ namespace NueralMinesweeper
             InitNeurons();
             InitWeights();
             CopyWeights(copyNetwork.weights);
+        }
+
+        public void Import(string filePath) { weights = ImportFromCSV(filePath); }
+        public void Export(string filePath) { ExportToCSV(weights, filePath); }
+
+        static void ExportToCSV(float[][][] data, string filePath)
+        {
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                int depth = data.Length;
+
+                for (int d = 0; d < depth; d++)
+                {
+                    int rows = data[d].Length;
+
+                    for (int row = 0; row < rows; row++)
+                    {
+                        int cols = data[d][row].Length;
+
+                        for (int col = 0; col < cols; col++)
+                        {
+                            writer.Write(data[d][row][col]);
+
+                            // Add a comma if it's not the last element in the row
+                            if (col < cols - 1)
+                            {
+                                writer.Write(",");
+                            }
+                        }
+
+                        // Move to the next line if it's not the last row
+                        if (row < rows - 1)
+                        {
+                            writer.WriteLine();
+                        }
+                    }
+
+                    // Move to the next line if it's not the last depth
+                    if (d < depth - 1)
+                    {
+                        writer.WriteLine();
+                    }
+                }
+            }
+        }
+
+        static float[][][] ImportFromCSV(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                string[] lines = File.ReadAllLines(filePath);
+
+                int depth = lines.Length;
+                int rows = lines[0].Split(',').Length;
+
+                float[][][] importedData = new float[depth][][];
+
+                for (int d = 0; d < depth; d++)
+                {
+                    string[] rowValues = lines[d].Split(',');
+
+                    importedData[d] = new float[rows][];
+
+                    for (int row = 0; row < rows; row++)
+                    {
+                        string[] colValues = rowValues[row].Split(',');
+
+                        int cols = colValues.Length; // Corrected this line
+
+                        importedData[d][row] = new float[cols];
+
+                        for (int col = 0; col < cols; col++)
+                        {
+                            if (float.TryParse(colValues[col], out float value))
+                            {
+                                importedData[d][row][col] = value;
+                            }
+                            else
+                            {
+                                // Handle parsing error as needed
+                                Console.WriteLine($"Error parsing value at depth {d}, row {row}, col {col}");
+                            }
+                        }
+                    }
+                }
+
+                return importedData;
+            }
+            return Array.Empty<float[][]>();
         }
 
 
