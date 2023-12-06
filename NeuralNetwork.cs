@@ -19,6 +19,7 @@ namespace NueralMinesweeper
         
         public NeuralNetwork(int[] layers)
         {
+            fitness = 0;
             this.layers = new int[layers.Length];
             for (int i = 0; i < layers.Length; i++)
                 this.layers[i] = layers[i];
@@ -31,6 +32,8 @@ namespace NueralMinesweeper
 
         public NeuralNetwork(NeuralNetwork copyNetwork)
         {
+            fitness = 0;
+
             this.layers = new int[copyNetwork.layers.Length];
             for (int i = 0; i < copyNetwork.layers.Length; i++)
             {
@@ -218,6 +221,7 @@ namespace NueralMinesweeper
 
         public void Mutate()
         {
+            fitness = 0;
             for (int i = 0; i < weights.Length; i++)
             {
                 for (int j = 0; j < weights[i].Length; j++)

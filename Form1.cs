@@ -11,7 +11,7 @@ namespace NueralMinesweeper
         private object comboBox2;
 
         //readonly List<UIMine> uiMineList = new();
-        const int POP = 50;
+        const int POP = 10;
         Stopwatch myAlgStopWatch = new();
         Task Gening;
         const int FIELDSIZE = 20;

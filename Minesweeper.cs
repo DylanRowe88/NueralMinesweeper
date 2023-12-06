@@ -1,4 +1,6 @@
-﻿namespace NueralMinesweeper
+﻿using System.Diagnostics;
+
+namespace NueralMinesweeper
 {
     public class Minefield : IComparable // Class to keep track of edges with consolidated methods
     {
@@ -131,18 +133,25 @@
 
         internal void Reset()
         {
-            uncovered = 0;
+            
+                uncovered = 0;
 
-            gameStarted = false;
-            gameFinished = false;
-            bombCount = 0;
-            bombIndex = new int[mineCount];
-            field.Clear();
-            for (int i = 0; i < width * height; i++)
+                gameStarted = false;
+                gameFinished = false;
+                bombCount = 0;
+                bombIndex = new int[mineCount];
+                //foreach(Tile t in field)
+
+                field.Clear();
+                for (int i = 0; i < width * height; i++)
+                {
+                    int x = field.Count % width;
+                    int y = field.Count / height;
+                    field.Add(new Tile(x, y, getIndex(x, y)));
+                }
+            if (fieldSize != field.Count)
             {
-                int x = field.Count % width;
-                int y = field.Count / height;
-                field.Add(new Tile(x, y, getIndex(x, y)));
+                throw new Exception("Count != fieldSize");
             }
         }
         /// <summary>
@@ -235,12 +244,19 @@
 
         public bool ItterateNet()
         {
+            
             var x = net.FeedForward(GetFeildF()).ToList();
             int index = x.IndexOf(x.Max());
             while (!makeMove(index))
             {
-                if(gameFinished)
+                if (gameFinished)
+                {
+                    if (GetFitness() == 0)
+                    {
+                        Debug.WriteLine("things broke");
+                    }
                     return false;
+                }
                 x[index] = float.NegativeInfinity;
                 index = x.IndexOf(x.Max());
                 net.AddFitness(-10);
