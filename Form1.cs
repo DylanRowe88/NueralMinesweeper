@@ -10,9 +10,9 @@ namespace NueralMinesweeper
     public partial class Form1 : Form
     {
         private List<Minefield> mineSweeperers;
-        readonly List<UIMine> uiMineList = new();
+        //readonly List<UIMine> uiMineList = new();
         const int POP = 50;
-        Stopwatch myAlgStopWatch = new();
+        //readonly Stopwatch myAlgStopWatch = new();
 
         public Form1()
         {
@@ -20,7 +20,7 @@ namespace NueralMinesweeper
             mineSweeperers = new();
             for (int i = 0; i < POP; i++)
             {
-                mineSweeperers.Add(new(20, 20, 50, true));
+                mineSweeperers.Add(new(10, 10, 12, true));
                 mineSweeperers[i].CompleteGame();
             }
             mineSweeperers.Sort();
@@ -29,7 +29,7 @@ namespace NueralMinesweeper
                 for (int i = 0; i < POP / 2; i++)
                 {
                     mineSweeperers[i].Reset();
-                    mineSweeperers[i + POP / 2] = new(20, 20, 50, mineSweeperers[i].GetNet(), true);
+                    mineSweeperers[i + POP / 2] = new(10, 10, 12, mineSweeperers[i].GetNet(), true);
                     mineSweeperers[i].Mutate();
                 }
                 foreach (Minefield m in mineSweeperers)
@@ -109,9 +109,9 @@ namespace NueralMinesweeper
         {
             //int[] f = myMinesweeper.GetFeild();
             //for (int i = 0; i < f.Length; i++)
-            {
-               // uiMineList[i].setTileVal(f[i]);
-            }
+            //{
+                // uiMineList[i].setTileVal(f[i]);
+            //}
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -133,7 +133,7 @@ namespace NueralMinesweeper
             UpdateUI();
             //myMinesweeper.Mutate();
             label1.Text = "done";
-            
+
 
         }
 
@@ -142,6 +142,22 @@ namespace NueralMinesweeper
             //myMinesweeper.Reset();
             UpdateUI();
 
+        }
+
+        private void button3_Click(object sender, EventArgs e) // Import
+        {
+            foreach (Minefield field in mineSweeperers)
+            {
+                field.Import(@"..\..\..\test.csv");
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e) // Export
+        {
+            foreach (Minefield field in mineSweeperers)
+            {
+                field.Export(@"..\..\..\test.csv");
+            }
         }
     }
     // Created class inheriting Button to customize its shape

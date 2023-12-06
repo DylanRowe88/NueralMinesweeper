@@ -47,6 +47,14 @@
         private int[] layers;
         private NeuralNetwork net;
 
+        public void Import(string filePath)
+        {
+            net.Import(filePath);
+        }
+        public void Export(string filePath)
+        {
+            net.Export(filePath);
+        }
 
         public int GetAdjCount(int index)
         {
