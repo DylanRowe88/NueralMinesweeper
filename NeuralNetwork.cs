@@ -16,7 +16,7 @@ namespace NueralMinesweeper
         private static readonly Random rand = new();
 
 
-
+        
         public NeuralNetwork(int[] layers)
         {
             this.layers = new int[layers.Length];
