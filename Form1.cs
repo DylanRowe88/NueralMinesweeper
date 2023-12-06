@@ -187,18 +187,6 @@ namespace NueralMinesweeper
             Gening = Task.WhenAll(tasks);
             return Task.WhenAll(tasks);
         }
-    }
-}
-// Created class inheriting Button to customize its shape
-class UIMine : Button
-{
-    public readonly int sideLen = 35; // Field is made of squares...
-    public readonly int index = -1;
-    public readonly int row = -1;
-    public readonly int col = -1;
-    public readonly int xOffset = 20;
-    public readonly int yOffset = 20;
-        }
 
         private void button3_Click(object sender, EventArgs e) // Import
         {
@@ -216,6 +204,12 @@ class UIMine : Button
             }
         }
     }
+}
+
+// Created class inheriting Button to customize its shape
+
+
+
     // Created class inheriting Button to customize its shape
     class UIMine : Button
     {
