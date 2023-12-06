@@ -32,6 +32,7 @@
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             panel1 = new Panel();
+            comboBox1 = new ComboBox();
             numericUpDown1 = new NumericUpDown();
             button4 = new Button();
             button3 = new Button();
@@ -41,7 +42,6 @@
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             panel2 = new Panel();
             pictureBox1 = new PictureBox();
-            comboBox1 = new ComboBox();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
@@ -64,6 +64,14 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(348, 880);
             panel1.TabIndex = 0;
+            // 
+            // comboBox1
+            // 
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(69, 271);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(121, 23);
+            comboBox1.TabIndex = 7;
             // 
             // numericUpDown1
             // 
@@ -99,7 +107,7 @@
             button2.Name = "button2";
             button2.Size = new Size(75, 23);
             button2.TabIndex = 3;
-            button2.Text = "button2";
+            button2.Text = "Update UI";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
@@ -116,9 +124,9 @@
             // 
             button1.Location = new Point(25, 41);
             button1.Name = "button1";
-            button1.Size = new Size(75, 23);
+            button1.Size = new Size(103, 23);
             button1.TabIndex = 1;
-            button1.Text = "button1";
+            button1.Text = "New Generation";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
@@ -159,14 +167,6 @@
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
-            // 
-            // comboBox1
-            // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(69, 271);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(121, 23);
-            comboBox1.TabIndex = 7;
             // 
             // Form1
             // 
