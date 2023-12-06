@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NueralMinesweeper
 {
-    internal class NeuralNetwork
+    public class NeuralNetwork
     {
         public int[] layers;
         public float[][] neurons;

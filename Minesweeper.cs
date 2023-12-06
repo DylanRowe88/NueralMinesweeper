@@ -95,6 +95,32 @@
             uncovered = 0;
         }
 
+        public Minefield(int newWidth, int newHeight, int mineCount,NeuralNetwork Net, bool multiLife = true) // Create minefield with dimensions and minecount
+        {
+            width = newWidth;
+            height = newHeight;
+            fieldSize = newWidth * newHeight;
+            for (int i = 0; i < width * height; i++)
+            {
+                int x = field.Count % width;
+                int y = field.Count / height;
+                field.Add(new Tile(x, y, getIndex(x, y)));
+            }
+            if (fieldSize != field.Count)
+            {
+                throw new Exception("Count != fieldSize");
+            }
+            this.mineCount = mineCount;
+            bombIndex = new int[mineCount];
+            this.multiLife = multiLife;
+            layers = new int[] { fieldSize, 5 * fieldSize, 5 * fieldSize, fieldSize };
+            net = new(Net);
+            gameFinished = false;
+            bombCount = 0;
+            gameStarted = false;
+            uncovered = 0;
+        }
+
         internal void Reset()
         {
             uncovered = 0;
@@ -245,9 +271,12 @@
         {
             if (obj is Minefield T)
             {
-                if (T.RatioUncovered() < RatioUncovered()) { return 1; }
-                else if (T.RatioUncovered() > RatioUncovered()) { return -1; }
-                else { return 0; }
+                if (GetFitness() < T.GetFitness())
+                    return 1;
+                else if (GetFitness() > T.GetFitness())
+                    return -1;
+                else
+                    return 0;
             }
             return 1;
         }
@@ -289,7 +318,10 @@
         public (int, int) getRowCol(int index) => (index / width, index % width);
         public int getIndex(int row, int col) => (row > height - 1 || col > width - 1 || row < 0 || col < 0 || row * col >= fieldSize) ? -1 : row * width + col;
 
-        
+        internal NeuralNetwork GetNet()
+        {
+            return net;
+        }
     }
 
 }

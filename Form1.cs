@@ -9,19 +9,32 @@ namespace NueralMinesweeper
 {
     public partial class Form1 : Form
     {
-        private Minefield[] mineSweeperers;
+        private List<Minefield> mineSweeperers;
         readonly List<UIMine> uiMineList = new();
-        const int POP = 10;
+        const int POP = 50;
         Stopwatch myAlgStopWatch = new();
 
         public Form1()
         {
             InitializeComponent();
-            mineSweeperers = new Minefield[POP];
+            mineSweeperers = new();
             for (int i = 0; i < POP; i++)
             {
-                mineSweeperers[i] = new(20, 20, 50, true);
+                mineSweeperers.Add(new(20, 20, 50, true));
                 mineSweeperers[i].CompleteGame();
+            }
+            mineSweeperers.Sort();
+            for (int j = 0; j < 10; j++)
+            {
+                for (int i = 0; i < POP / 2; i++)
+                {
+                    mineSweeperers[i].Reset();
+                    mineSweeperers[i + POP / 2] = new(20, 20, 50, mineSweeperers[i].GetNet(), true);
+                    mineSweeperers[i].Mutate();
+                }
+                foreach (Minefield m in mineSweeperers)
+                    m.CompleteGame();
+                mineSweeperers.Sort();
             }
             label1.Text = $"MAX: {mineSweeperers.Max(sweeper => sweeper.GetFitness())}, Min: {mineSweeperers.Min(sweeper => sweeper.GetFitness())}";
         }
