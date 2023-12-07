@@ -1,4 +1,6 @@
-﻿namespace NueralMinesweeper
+﻿using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+
+namespace NueralMinesweeper
 {
     public class NeuralNetwork
     {
@@ -278,6 +280,28 @@
                     {
                         // Splice the weights from the parent into this network
                         weights[i][j][k] = parent.weights[i][j][k];
+                    }
+                }
+            }
+        }
+
+        public void WoC(NeuralNetwork[] parents)
+        {
+            // Determine the crossover point (where to splice the weights)
+
+            for (int i = 0; i < weights.Length; i++)
+            {
+                for (int j = 0; j < weights[i].Length; j++)
+                {
+                    for (int k = 0; k < weights[i][j].Length; k++)
+                    {
+                        float sum = weights[i][j][k];
+                        foreach (NeuralNetwork n in parents)
+                        {
+                            sum += n.weights[i][j][k];
+                        }
+                        // Splice the weights from the parent into this network
+                        weights[i][j][k] = (sum/parents.Count())+1;
                     }
                 }
             }
