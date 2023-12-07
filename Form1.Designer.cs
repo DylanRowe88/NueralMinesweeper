@@ -32,6 +32,8 @@
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             panel1 = new Panel();
+            checkBox2 = new CheckBox();
+            panel3 = new Panel();
             numericUpDown2 = new NumericUpDown();
             label8 = new Label();
             label7 = new Label();
@@ -51,17 +53,27 @@
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             panel2 = new Panel();
             pictureBox1 = new PictureBox();
-            panel3 = new Panel();
+            numericUpDown3 = new NumericUpDown();
+            label9 = new Label();
+            label10 = new Label();
+            numericUpDown4 = new NumericUpDown();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown4).BeginInit();
             SuspendLayout();
             // 
             // panel1
             // 
+            panel1.Controls.Add(label10);
+            panel1.Controls.Add(numericUpDown4);
+            panel1.Controls.Add(label9);
+            panel1.Controls.Add(numericUpDown3);
+            panel1.Controls.Add(checkBox2);
             panel1.Controls.Add(panel3);
             panel1.Controls.Add(numericUpDown2);
             panel1.Controls.Add(label8);
@@ -85,6 +97,24 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(348, 880);
             panel1.TabIndex = 0;
+            // 
+            // checkBox2
+            // 
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new Point(158, 117);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(81, 19);
+            checkBox2.TabIndex = 18;
+            checkBox2.Text = "Const Gen";
+            checkBox2.UseVisualStyleBackColor = true;
+            checkBox2.CheckedChanged += checkBox2_CheckedChanged;
+            // 
+            // panel3
+            // 
+            panel3.Location = new Point(277, 41);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(44, 37);
+            panel3.TabIndex = 17;
             // 
             // numericUpDown2
             // 
@@ -279,12 +309,41 @@
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
             // 
-            // panel3
+            // numericUpDown3
             // 
-            panel3.Location = new Point(277, 41);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(44, 37);
-            panel3.TabIndex = 17;
+            numericUpDown3.Location = new Point(25, 329);
+            numericUpDown3.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown3.Name = "numericUpDown3";
+            numericUpDown3.Size = new Size(120, 23);
+            numericUpDown3.TabIndex = 19;
+            numericUpDown3.Value = new decimal(new int[] { 3, 0, 0, 0 });
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(25, 311);
+            label9.Name = "label9";
+            label9.Size = new Size(99, 15);
+            label9.TabIndex = 20;
+            label9.Text = "Mutation Chance";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(25, 364);
+            label10.Name = "label10";
+            label10.Size = new Size(86, 15);
+            label10.TabIndex = 22;
+            label10.Text = "Mutation Scale";
+            // 
+            // numericUpDown4
+            // 
+            numericUpDown4.Location = new Point(25, 382);
+            numericUpDown4.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown4.Name = "numericUpDown4";
+            numericUpDown4.Size = new Size(120, 23);
+            numericUpDown4.TabIndex = 21;
+            numericUpDown4.Value = new decimal(new int[] { 100, 0, 0, 0 });
             // 
             // Form1
             // 
@@ -303,6 +362,8 @@
             ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
             panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown4).EndInit();
             ResumeLayout(false);
         }
 
@@ -329,5 +390,10 @@
         private Label label8;
         private NumericUpDown numericUpDown2;
         private Panel panel3;
+        private CheckBox checkBox2;
+        private Label label10;
+        private NumericUpDown numericUpDown4;
+        private Label label9;
+        private NumericUpDown numericUpDown3;
     }
 }

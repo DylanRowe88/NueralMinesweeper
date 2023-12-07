@@ -83,7 +83,7 @@ namespace NueralMinesweeper
             fieldSize = field.Count;
         }*/
 
-        public Minefield(int newWidth, int newHeight, int mineCount, bool multiLife = true) // Create minefield with dimensions and minecount
+        public Minefield(int newWidth, int newHeight, int mineCount,int mutationChance, int mutationSevarity, bool multiLife = true) // Create minefield with dimensions and minecount
         {
             width = newWidth;
             height = newHeight;
@@ -102,7 +102,7 @@ namespace NueralMinesweeper
             bombIndex = new int[mineCount];
             this.multiLife = multiLife;
             layers = new int[] { fieldSize, 5 * fieldSize, 5 * fieldSize, fieldSize };
-            net = new(layers);
+            net = new(layers, mutationChance, mutationSevarity);
             gameFinished = false;
             bombCount = 0;
             gameStarted = false;
@@ -111,7 +111,7 @@ namespace NueralMinesweeper
             moveCount = 0;
         }
 
-        public Minefield(int newWidth, int newHeight, int mineCount,NeuralNetwork Net, bool multiLife = true) // Create minefield with dimensions and minecount
+        public Minefield(int newWidth, int newHeight, int mineCount, int mutationChance, int mutationSevarity, NeuralNetwork Net, bool multiLife = true) // Create minefield with dimensions and minecount
         {
             width = newWidth;
             height = newHeight;
@@ -130,7 +130,7 @@ namespace NueralMinesweeper
             bombIndex = new int[mineCount];
             this.multiLife = multiLife;
             layers = new int[] { fieldSize, 5 * fieldSize, 5 * fieldSize, fieldSize };
-            net = new(Net);
+            net = new(Net, mutationChance, mutationSevarity);
             gameFinished = false;
             bombCount = 0;
             gameStarted = false;

@@ -11,15 +11,27 @@ namespace NueralMinesweeper
         private object comboBox2;
 
         readonly List<UIMine> uiMineList = new();
-        const int POP = 10;
+        const int POP = 50;
         int GenCnt = 1;
         Stopwatch myAlgStopWatch = new();
         Task Gening;
         const int FIELDSIZE = 20;
+
+        int availableCores = Environment.ProcessorCount;
+        int coresToLeaveFree = 2;
+        int maxConcurrentTasks;
+
+        SemaphoreSlim semaphore;
+
+        List<Task> tasks = new List<Task>();
+
+
         public Form1()
         {
             InitializeComponent();
             mineSweeperers = new();
+            maxConcurrentTasks = availableCores - coresToLeaveFree;
+            semaphore = new SemaphoreSlim(maxConcurrentTasks);
 
         }
 
@@ -169,7 +181,18 @@ namespace NueralMinesweeper
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            Task gen = Task.Run(() => { GenerateAI(); });
+            Task gen = Task.Run(async () => 
+            {
+            await semaphore.WaitAsync(); // Wait until a slot is available
+            try
+            {
+                GenerateAI();
+                }
+                finally
+                {
+                    semaphore.Release(); // Release the slot
+                }
+            });
 
             await gen;
             Gening = Task.CompletedTask;
@@ -183,14 +206,36 @@ namespace NueralMinesweeper
             List<Task> tasks = new List<Task>();
             for (int i = 0; i < POP; i++)
             {
-                tasks.Add(Task.Run(() => { mineSweeperers.Add(new(FIELDSIZE, FIELDSIZE, (int)(FIELDSIZE * 2.5), true)); }));
+                tasks.Add(Task.Run(async () =>
+                {
+                await semaphore.WaitAsync(); // Wait until a slot is available
+                try
+                {
+                    mineSweeperers.Add(new(FIELDSIZE, FIELDSIZE, (int)(FIELDSIZE * 2.5), (int)numericUpDown3.Value, (int)numericUpDown4.Value, true));
+                    }
+                    finally
+                    {
+                        semaphore.Release(); // Release the slot
+                    }
+                }));
             }
             await Task.WhenAll(tasks);
             tasks.Clear();
             for (int i = 0; i < POP; i++)
             {
                 int index = i;
-                tasks.Add(Task.Run(() => { mineSweeperers[index].CompleteGame(); }));
+                tasks.Add(Task.Run(async () =>
+                {
+                await semaphore.WaitAsync(); // Wait until a slot is available
+                    try
+                    {
+                        mineSweeperers[index].CompleteGame();
+                    }
+                    finally
+                    {
+                        semaphore.Release(); // Release the slot
+                    }
+                }));
             }
             await Task.WhenAll(tasks);
             mineSweeperers.Sort();
@@ -210,24 +255,48 @@ namespace NueralMinesweeper
             {
                 int index = i;
 
-                tasks.Add(Task.Run(() =>
-            {
-                mineSweeperers[index + POP / 2] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), mineSweeperers[i].GetNet(), true);
-            }));
+                tasks.Add(Task.Run(async () =>
+                {
+                    await semaphore.WaitAsync(); // Wait until a slot is available
+                    try
+                    {
+                        mineSweeperers[index + POP / 2] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), (int)numericUpDown3.Value, (int)numericUpDown4.Value, mineSweeperers[i].GetNet(), true);
+                    }
+                    finally
+                    {
+                        semaphore.Release(); // Release the slot
+                    }
+                }));
             }
             await Task.WhenAll(tasks);
             tasks.Clear();
             for (int i = 0; i < POP / 2; i++)
             {
                 int index = i;
-                tasks.Add(Task.Run(() =>
+                tasks.Add(Task.Run(async () =>
                 {
-                    mineSweeperers[index].Reset();
+                    await semaphore.WaitAsync(); // Wait until a slot is available
+                    try
+                    {
+                        mineSweeperers[index].Reset();
+                    }
+                    finally
+                    {
+                        semaphore.Release(); // Release the slot
+                    }
                 }));
 
-                tasks.Add(Task.Run(() =>
+                tasks.Add(Task.Run(async () =>
                 {
-                    mineSweeperers[index].Mutate();
+                    await semaphore.WaitAsync(); // Wait until a slot is available
+                    try
+                    {
+                        mineSweeperers[index].Mutate();
+                    }
+                    finally
+                    {
+                        semaphore.Release(); // Release the slot
+                    }
                 }));
             }
             await Task.WhenAll(tasks);
@@ -236,7 +305,16 @@ namespace NueralMinesweeper
             for (int i = 0; i < POP; i++)
             {
                 int index = i;
-                tasks.Add(Task.Run(() => { mineSweeperers[index].CompleteGame(); }));
+                tasks.Add(Task.Run(async () =>
+                {
+                    await semaphore.WaitAsync(); // Wait until a slot is available
+                    try
+                    { mineSweeperers[index].CompleteGame(); }
+                    finally
+                    {
+                        semaphore.Release(); // Release the slot
+                    }
+                }));
             }
             Gening = Task.WhenAll(tasks);
             GenCnt++;
@@ -283,6 +361,14 @@ namespace NueralMinesweeper
             else
                 checkBox1.Text = "Min";
             UpdateUI();
+        }
+
+        private async void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            while (checkBox2.Checked)
+                await Gen();
+            Gening = Task.CompletedTask;
+
         }
     }
 }
