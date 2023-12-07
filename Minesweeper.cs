@@ -241,7 +241,7 @@ namespace NueralMinesweeper
             }
         }
 
-        public bool ItterateNet()
+        public bool IterateNet()
         {
             
             var x = net.FeedForward(GetFeildF()).ToList();
@@ -280,7 +280,7 @@ namespace NueralMinesweeper
         }
         public void CompleteGame()
         {
-            while (ItterateNet()) ;
+            while (IterateNet()) ;
         }
         public int GetBombsHit()
         {
