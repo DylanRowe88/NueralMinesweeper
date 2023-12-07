@@ -32,6 +32,7 @@
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             panel1 = new Panel();
+            panel3 = new Panel();
             numericUpDown2 = new NumericUpDown();
             label8 = new Label();
             label7 = new Label();
@@ -51,7 +52,6 @@
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             panel2 = new Panel();
             pictureBox1 = new PictureBox();
-            panel3 = new Panel();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
@@ -85,6 +85,13 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(348, 880);
             panel1.TabIndex = 0;
+            // 
+            // panel3
+            // 
+            panel3.Location = new Point(277, 41);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(44, 37);
+            panel3.TabIndex = 17;
             // 
             // numericUpDown2
             // 
@@ -245,12 +252,12 @@
             // 
             chartArea1.Name = "ChartArea1";
             chart1.ChartAreas.Add(chartArea1);
-            legend1.Enabled = false;
             legend1.Name = "Legend1";
             chart1.Legends.Add(legend1);
             chart1.Location = new Point(21, 560);
             chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series1.IsXValueIndexed = true;
             series1.Legend = "Legend1";
             series1.Name = "Uncovered";
@@ -258,6 +265,7 @@
             chart1.Size = new Size(300, 300);
             chart1.TabIndex = 0;
             chart1.Text = "chart1";
+            chart1.Click += chart1_Click;
             // 
             // panel2
             // 
@@ -278,13 +286,6 @@
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
-            // 
-            // panel3
-            // 
-            panel3.Location = new Point(277, 41);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(44, 37);
-            panel3.TabIndex = 17;
             // 
             // Form1
             // 

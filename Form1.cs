@@ -16,9 +16,14 @@ namespace NueralMinesweeper
         Stopwatch myAlgStopWatch = new();
         Task Gening;
         const int FIELDSIZE = 20;
+
+        const string MAX_GRAPH_DATANAME = "Golden-Child Gens";
+        const string MIN_GRAPH_DATANAME = "Middle-Child Gens";
+
         public Form1()
         {
             InitializeComponent();
+            CreateChart();
             mineSweeperers = new();
 
         }
@@ -284,6 +289,45 @@ namespace NueralMinesweeper
                 checkBox1.Text = "Min";
             UpdateUI();
         }
+
+        private void CreateChart()
+        {
+            var graph = chart1.ChartAreas[0];
+
+            graph.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            graph.AxisX.LabelStyle.Format = "";
+            graph.AxisX.LabelStyle.IsEndLabelVisible = true;
+            graph.AxisX.Minimum = 1;
+
+
+            //-25000 to 3500
+            graph.AxisY.LabelStyle.Format = "";
+            graph.AxisY.Minimum = 0;
+
+            chart1.Series[0].IsVisibleInLegend = false;
+
+            chart1.Series.Add(MAX_GRAPH_DATANAME);
+            chart1.Series[MAX_GRAPH_DATANAME].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            chart1.Series[MAX_GRAPH_DATANAME].Color = Color.Purple;
+            chart1.Series[MAX_GRAPH_DATANAME].IsVisibleInLegend = true;
+
+            chart1.Series.Add(MIN_GRAPH_DATANAME);
+            chart1.Series[MIN_GRAPH_DATANAME].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            chart1.Series[MIN_GRAPH_DATANAME].Color = Color.DarkGreen;
+            chart1.Series[MIN_GRAPH_DATANAME].IsVisibleInLegend = true;
+
+            UpdateChart();
+        }
+
+        private void UpdateChart()
+        {
+            
+        }
+
+        private void chart1_Click(object sender, EventArgs e)
+        {
+            UpdateChart();
+        }
     }
 }
 
@@ -346,6 +390,5 @@ class UIMine : Button
         if (flag) { this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperFlag.png"); }
         else { this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperCoveredTile.png"); }
     }
-
 }
 
