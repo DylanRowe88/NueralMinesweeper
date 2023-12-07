@@ -211,15 +211,18 @@ namespace NueralMinesweeper
             Gening = Task.Delay(1000000000);
             mineSweeperers.Sort();
 
-            float sumFitness = 0f;
-            float maxFitness = mineSweeperers.First().GetFitness();
-            if (maxFitness > _maxFitness)
-                _maxFitness = maxFitness;
-            foreach (Minefield sweeper in mineSweeperers)
-                sumFitness += sweeper.GetFitness();
-            float avgFitness = sumFitness / POP;
-            label9.Text = $"All Time Fitness High: {_maxFitness}";
-            UpdateChart(GenCnt, maxFitness, avgFitness);
+            lock (mineSweeperers)
+            {
+                float sumFitness = 0f;
+                float maxFitness = mineSweeperers.First().GetFitness();
+                if (maxFitness > _maxFitness)
+                    _maxFitness = maxFitness;
+                foreach (Minefield sweeper in mineSweeperers)
+                    sumFitness += sweeper.GetFitness();
+                float avgFitness = sumFitness / POP;
+                label9.Text = $"All Time Fitness High: {_maxFitness}";
+                UpdateChart(GenCnt, maxFitness, avgFitness);
+            }
 
             //this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
             List<Task> tasks = new List<Task>();
