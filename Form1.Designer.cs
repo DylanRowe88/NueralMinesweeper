@@ -275,12 +275,12 @@
             // 
             chartArea1.Name = "ChartArea1";
             chart1.ChartAreas.Add(chartArea1);
-            legend1.Enabled = false;
             legend1.Name = "Legend1";
             chart1.Legends.Add(legend1);
             chart1.Location = new Point(21, 560);
             chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series1.IsXValueIndexed = true;
             series1.Legend = "Legend1";
             series1.Name = "Uncovered";
@@ -288,6 +288,7 @@
             chart1.Size = new Size(300, 300);
             chart1.TabIndex = 0;
             chart1.Text = "chart1";
+            chart1.Click += chart1_Click;
             // 
             // panel2
             // 

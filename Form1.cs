@@ -17,18 +17,13 @@ namespace NueralMinesweeper
         Task Gening;
         const int FIELDSIZE = 20;
 
-        int availableCores = Environment.ProcessorCount;
-        int coresToLeaveFree = 2;
-        int maxConcurrentTasks;
-
-        SemaphoreSlim semaphore;
-
-        List<Task> tasks = new List<Task>();
-
+        const string MAX_GRAPH_DATANAME = "Golden-Child Gens";
+        const string MIN_GRAPH_DATANAME = "Middle-Child Gens";
 
         public Form1()
         {
             InitializeComponent();
+            CreateChart();
             mineSweeperers = new();
             maxConcurrentTasks = availableCores - coresToLeaveFree;
             semaphore = new SemaphoreSlim(maxConcurrentTasks);
@@ -181,18 +176,7 @@ namespace NueralMinesweeper
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            Task gen = Task.Run(async () => 
-            {
-            await semaphore.WaitAsync(); // Wait until a slot is available
-            try
-            {
-                GenerateAI();
-                }
-                finally
-                {
-                    semaphore.Release(); // Release the slot
-                }
-            });
+            Task gen = Task.Run(() => { GenerateAI(); });
 
             await gen;
             Gening = Task.CompletedTask;
@@ -206,36 +190,14 @@ namespace NueralMinesweeper
             List<Task> tasks = new List<Task>();
             for (int i = 0; i < POP; i++)
             {
-                tasks.Add(Task.Run(async () =>
-                {
-                await semaphore.WaitAsync(); // Wait until a slot is available
-                try
-                {
-                    mineSweeperers.Add(new(FIELDSIZE, FIELDSIZE, (int)(FIELDSIZE * 2.5), (int)numericUpDown3.Value, (int)numericUpDown4.Value, true));
-                    }
-                    finally
-                    {
-                        semaphore.Release(); // Release the slot
-                    }
-                }));
+                tasks.Add(Task.Run(() => { mineSweeperers.Add(new(FIELDSIZE, FIELDSIZE, (int)(FIELDSIZE * 2.5), true)); }));
             }
             await Task.WhenAll(tasks);
             tasks.Clear();
             for (int i = 0; i < POP; i++)
             {
                 int index = i;
-                tasks.Add(Task.Run(async () =>
-                {
-                await semaphore.WaitAsync(); // Wait until a slot is available
-                    try
-                    {
-                        mineSweeperers[index].CompleteGame();
-                    }
-                    finally
-                    {
-                        semaphore.Release(); // Release the slot
-                    }
-                }));
+                tasks.Add(Task.Run(() => { mineSweeperers[index].CompleteGame(); }));
             }
             await Task.WhenAll(tasks);
             mineSweeperers.Sort();
@@ -255,48 +217,24 @@ namespace NueralMinesweeper
             {
                 int index = i;
 
-                tasks.Add(Task.Run(async () =>
-                {
-                    await semaphore.WaitAsync(); // Wait until a slot is available
-                    try
-                    {
-                        mineSweeperers[index + POP / 2] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), (int)numericUpDown3.Value, (int)numericUpDown4.Value, mineSweeperers[i].GetNet(), true);
-                    }
-                    finally
-                    {
-                        semaphore.Release(); // Release the slot
-                    }
-                }));
+                tasks.Add(Task.Run(() =>
+            {
+                mineSweeperers[index + POP / 2] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), mineSweeperers[i].GetNet(), true);
+            }));
             }
             await Task.WhenAll(tasks);
             tasks.Clear();
             for (int i = 0; i < POP / 2; i++)
             {
                 int index = i;
-                tasks.Add(Task.Run(async () =>
+                tasks.Add(Task.Run(() =>
                 {
-                    await semaphore.WaitAsync(); // Wait until a slot is available
-                    try
-                    {
-                        mineSweeperers[index].Reset();
-                    }
-                    finally
-                    {
-                        semaphore.Release(); // Release the slot
-                    }
+                    mineSweeperers[index].Reset();
                 }));
 
-                tasks.Add(Task.Run(async () =>
+                tasks.Add(Task.Run(() =>
                 {
-                    await semaphore.WaitAsync(); // Wait until a slot is available
-                    try
-                    {
-                        mineSweeperers[index].Mutate();
-                    }
-                    finally
-                    {
-                        semaphore.Release(); // Release the slot
-                    }
+                    mineSweeperers[index].Mutate();
                 }));
             }
             await Task.WhenAll(tasks);
@@ -305,16 +243,7 @@ namespace NueralMinesweeper
             for (int i = 0; i < POP; i++)
             {
                 int index = i;
-                tasks.Add(Task.Run(async () =>
-                {
-                    await semaphore.WaitAsync(); // Wait until a slot is available
-                    try
-                    { mineSweeperers[index].CompleteGame(); }
-                    finally
-                    {
-                        semaphore.Release(); // Release the slot
-                    }
-                }));
+                tasks.Add(Task.Run(() => { mineSweeperers[index].CompleteGame(); }));
             }
             Gening = Task.WhenAll(tasks);
             GenCnt++;
@@ -369,6 +298,47 @@ namespace NueralMinesweeper
                 await Gen();
             Gening = Task.CompletedTask;
 
+        }
+    }
+}
+
+        private void CreateChart()
+        {
+            var graph = chart1.ChartAreas[0];
+
+            graph.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            graph.AxisX.LabelStyle.Format = "";
+            graph.AxisX.LabelStyle.IsEndLabelVisible = true;
+            graph.AxisX.Minimum = 1;
+
+
+            //-25000 to 3500
+            graph.AxisY.LabelStyle.Format = "";
+            graph.AxisY.Minimum = 0;
+
+            chart1.Series[0].IsVisibleInLegend = false;
+
+            chart1.Series.Add(MAX_GRAPH_DATANAME);
+            chart1.Series[MAX_GRAPH_DATANAME].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            chart1.Series[MAX_GRAPH_DATANAME].Color = Color.Purple;
+            chart1.Series[MAX_GRAPH_DATANAME].IsVisibleInLegend = true;
+
+            chart1.Series.Add(MIN_GRAPH_DATANAME);
+            chart1.Series[MIN_GRAPH_DATANAME].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            chart1.Series[MIN_GRAPH_DATANAME].Color = Color.DarkGreen;
+            chart1.Series[MIN_GRAPH_DATANAME].IsVisibleInLegend = true;
+
+            UpdateChart();
+        }
+
+        private void UpdateChart()
+        {
+            
+        }
+
+        private void chart1_Click(object sender, EventArgs e)
+        {
+            UpdateChart();
         }
     }
 }
@@ -432,6 +402,5 @@ class UIMine : Button
         if (flag) { this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperFlag.png"); }
         else { this.BackgroundImage = Image.FromFile(@"..\..\..\MinesweeperCoveredTile.png"); }
     }
-
 }
 
