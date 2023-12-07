@@ -32,6 +32,7 @@
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             panel1 = new Panel();
+            label12 = new Label();
             button5 = new Button();
             checkBox2 = new CheckBox();
             label11 = new Label();
@@ -59,7 +60,7 @@
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             panel2 = new Panel();
             pictureBox1 = new PictureBox();
-            label12 = new Label();
+            label13 = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown3).BeginInit();
@@ -72,6 +73,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(label13);
             panel1.Controls.Add(label12);
             panel1.Controls.Add(button5);
             panel1.Controls.Add(checkBox2);
@@ -103,6 +105,16 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(348, 880);
             panel1.TabIndex = 0;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(169, 174);
+            label12.Name = "label12";
+            label12.Size = new Size(57, 15);
+            label12.TabIndex = 25;
+            label12.Text = "Iteration: ";
+            label12.Click += label12_Click;
             // 
             // button5
             // 
@@ -371,15 +383,14 @@
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
             // 
-            // label12
+            // label13
             // 
-            label12.AutoSize = true;
-            label12.Location = new Point(169, 174);
-            label12.Name = "label12";
-            label12.Size = new Size(57, 15);
-            label12.TabIndex = 25;
-            label12.Text = "Iteration: ";
-            label12.Click += label12_Click;
+            label13.AutoSize = true;
+            label13.Location = new Point(28, 436);
+            label13.Name = "label13";
+            label13.Size = new Size(89, 15);
+            label13.TabIndex = 26;
+            label13.Text = "Recent Avg Fit: ";
             // 
             // Form1
             // 
@@ -434,5 +445,6 @@
         private NumericUpDown numericUpDown3;
         private Button button5;
         private Label label12;
+        private Label label13;
     }
 }

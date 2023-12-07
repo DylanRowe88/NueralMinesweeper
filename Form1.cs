@@ -230,18 +230,19 @@ namespace NueralMinesweeper
                     sumFitness += sweeper.GetFitness();
                 float avgFitness = sumFitness / POP;
                 label9.Text = $"All Time Fitness High: {_maxFitness}";
-                UpdateChart(GenCnt, maxFitness, avgFitness);
+                label13.Text = "Recent Avg Fit: " + avgFitness;
+                    UpdateChart(GenCnt, maxFitness, avgFitness);
             }
 
             //this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
             List<Task> tasks = new List<Task>();
-            for (int i = 0; i < POP/2; i++)
+            for (int i = 0; i < POP / 2; i++)
             {
                 int index = i;
 
                 tasks.Add(Task.Run(() =>
             {
-                mineSweeperers[index+POP/2] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), (int)numericUpDown3.Value,(int)numericUpDown4.Value,mineSweeperers[index].GetNet(), true);//copy the first 3rd to the last 2/3rds
+                mineSweeperers[index + POP / 2] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), (int)numericUpDown3.Value, (int)numericUpDown4.Value, mineSweeperers[index].GetNet(), true);//copy the first 3rd to the last 2/3rds
             }));
             }
             await Task.WhenAll(tasks);
@@ -249,7 +250,7 @@ namespace NueralMinesweeper
 
 
 
-            for (int i = POP/2; i < POP*.75; i++)
+            for (int i = POP / 2; i < POP * .75; i++)
             {
                 int index = i;
                 int parent = rand.Next(POP / 2);
@@ -260,7 +261,7 @@ namespace NueralMinesweeper
             }
             await Task.WhenAll(tasks);
             tasks.Clear();
-            for (int i = (int)(POP*.75); i < POP; i++)
+            for (int i = (int)(POP * .75); i < POP; i++)
             {
                 int index = i;
                 tasks.Add(Task.Run(() =>
@@ -276,7 +277,7 @@ namespace NueralMinesweeper
             await Task.WhenAll(tasks);
             tasks.Clear();
 
-            mineSweeperers[50].WoC(mineSweeperers.GetRange(0,POP / 2).ToArray());
+            mineSweeperers[50].WoC(mineSweeperers.GetRange(0, POP / 2).ToArray());
             mineSweeperers[49].WoC(mineSweeperers.GetRange(0, POP / 2).ToArray());
 
             for (int i = 0; i < POP; i++)
