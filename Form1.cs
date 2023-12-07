@@ -229,7 +229,7 @@ namespace NueralMinesweeper
 
                 tasks.Add(Task.Run(() =>
             {
-                mineSweeperers[index + POP / 2] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), (int)numericUpDown3.Value,(int)numericUpDown4.Value,mineSweeperers[i].GetNet(), true);
+                mineSweeperers[index + POP / 2] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), (int)numericUpDown3.Value, (int)numericUpDown4.Value, mineSweeperers[i].GetNet(), true);
             }));
             }
             await Task.WhenAll(tasks);
@@ -309,7 +309,7 @@ namespace NueralMinesweeper
             Gening = Task.CompletedTask;
 
         }
-    
+
         private void CreateChart()
         {
             var graph = chart1.ChartAreas[0];
