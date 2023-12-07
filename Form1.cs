@@ -12,6 +12,7 @@ namespace NueralMinesweeper
 
         readonly List<UIMine> uiMineList = new();
         const int POP = 2;
+        int GenCnt = 1;
         Stopwatch myAlgStopWatch = new();
         Task Gening;
         const int FIELDSIZE = 20;
@@ -88,14 +89,11 @@ namespace NueralMinesweeper
             }
         }
 
-        private void UpdateUI(double max = -1, double min = -1)
+        private void UpdateUI()
         {
             mineSweeperers.Sort();
-            label1.Text = $"MAX: {mineSweeperers[0].GetFitness()}, Min: {min}";
-            label3.Text = "Bombs Hit: " + mineSweeperers[0].GetBombsHit();
-            label4.Text = "Repeat Tiles: " + mineSweeperers[0].getRepeatTiles();
-            label5.Text = "Good Hits: " + mineSweeperers[0].getGoodHits();
-            label6.Text = "Uncovered: " + mineSweeperers[0].getUncovered();
+            label1.Text = $"MAX: {mineSweeperers[0].GetFitness()}, Min: {mineSweeperers[^1].GetFitness()}";
+            label7.Text = "GenCnt: " + GenCnt;
             //progressBar1.Value = 0;
             //TaskbarProgress.SetValue(this.Handle, 0, 1);
 
@@ -105,11 +103,26 @@ namespace NueralMinesweeper
             }
             uiMineList.Clear();
 
-
-            int[] UIfield = mineSweeperers[0].GetFeild();
-            for (int i = 0; i < mineSweeperers[0].fieldSize; i++)
+            Minefield tmp;
+            if (checkBox1.Checked)
             {
-                UIMine button = new UIMine(i, mineSweeperers[0].getRowCol(i));
+                tmp = mineSweeperers[0];
+            }
+            else
+            {
+                tmp = mineSweeperers[^1];
+            }
+            label3.Text = "Bombs Hit: " + tmp.GetBombsHit();
+            label4.Text = "Repeat Tiles: " + tmp.getRepeatTiles();
+            label5.Text = "Good Hits: " + tmp.getGoodHits();
+            label6.Text = "Uncovered: " + tmp.getUncovered();
+            label8.Text = "MoveCnt: " + tmp.getMoveCnt();
+
+
+            int[] UIfield = tmp.GetFeild();
+            for (int i = 0; i < tmp.fieldSize; i++)
+            {
+                UIMine button = new UIMine(i, tmp.getRowCol(i));
                 button.setTileVal(UIfield[i]);
                 //button.MouseUp += (sender, EventArgs) => { OnMineClick(sender, EventArgs); };
                 pictureBox1.Controls.Add(button);
@@ -136,12 +149,10 @@ namespace NueralMinesweeper
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < numericUpDown2.Value; i++)
             {
                 await Gen();
             }
-            //mineSweeperers.Sort();
-            //this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -222,14 +233,15 @@ namespace NueralMinesweeper
                 tasks.Add(Task.Run(() => { mineSweeperers[index].CompleteGame(); }));
             }
             Gening = Task.WhenAll(tasks);
+            GenCnt++;
             return Task.WhenAll(tasks);
         }
 
         private void button3_Click(object sender, EventArgs e) // Import
         {
-            if (Gening != Task.CompletedTask || comboBox1.SelectedItem.ToString() == null){return;}
+            if (Gening != Task.CompletedTask || comboBox1.SelectedItem.ToString() == null) { return; }
             string filepath = comboBox1.SelectedItem.ToString();
-            mineSweeperers[(int)numericUpDown1.Value].Import(filepath);
+            mineSweeperers[(int)numericUpDown1.Value - 1].Import(filepath);
 
             //for (int i = 0; i < numericUpDown1.Value; i++)
             //{
@@ -248,7 +260,7 @@ namespace NueralMinesweeper
                 + mineSweeperers[i].getNetLayerSize(1).ToString() + "-"
                 + mineSweeperers[i].getNetLayerSize(2).ToString() + "-"
                 + mineSweeperers[i].getNetLayerSize(3).ToString() + "_"
-                + (i+1) + "_" + mineSweeperers[i].GetFitness() + ".csv");
+                + (i + 1) + "_" + mineSweeperers[i].GetFitness() + ".csv");
             }
             comboBox1.Items.AddRange(Directory.GetFiles(@"../../../nets"));
         }
@@ -256,6 +268,15 @@ namespace NueralMinesweeper
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+                checkBox1.Text = "Max";
+            else
+                checkBox1.Text = "Min";
+            UpdateUI();
         }
     }
 }

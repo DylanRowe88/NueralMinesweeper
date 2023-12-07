@@ -246,38 +246,36 @@ namespace NueralMinesweeper
 
         public bool ItterateNet()
         {
-            lock (net)
+            
+            var x = net.FeedForward(GetFeildF()).ToList();
+            int index = x.IndexOf(x.Max());
+            moveCount++;
+            while (!makeMove(index))
             {
-                var x = net.FeedForward(GetFeildF()).ToList();
-                int index = x.IndexOf(x.Max());
-                moveCount++;
-                while (!makeMove(index))
+                if (gameFinished)
                 {
-                    if (gameFinished)
+                    if (GetFitness() == 0)
                     {
-                        if (GetFitness() == 0)
-                        {
-                            Debug.WriteLine("things broke");
-                        }
-                        return false;
+                        Debug.WriteLine("things broke");
                     }
-                    x[index] = float.NegativeInfinity;
-                    index = x.IndexOf(x.Max());
-                    net.AddFitness(-1);
-                    repeatTiles++;
-                    moveCount++;
+                    return false;
                 }
-                if (field[index].isMine)
-                {
-                    net.AddFitness(-50);
-                }
-                else
-                {
-                    net.AddFitness(10);
-                    goodHits++;
-                }
-                return true;
+                x[index] = float.NegativeInfinity;
+                index = x.IndexOf(x.Max());
+                net.AddFitness(-1);
+                repeatTiles++;
+                moveCount++;
             }
+            if (field[index].isMine)
+            {
+                net.AddFitness(-100);
+            }
+            else
+            {
+                net.AddFitness(10);
+                goodHits++;
+            }
+            return true;
         }
         public float GetFitness()
         {
@@ -302,6 +300,10 @@ namespace NueralMinesweeper
         public int getUncovered()
         {
             return uncovered;
+        }
+        public int getMoveCnt()
+        {
+            return moveCount;
         }
         public void Mutate()
         {
