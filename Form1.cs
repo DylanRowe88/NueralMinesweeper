@@ -14,7 +14,7 @@ namespace NueralMinesweeper
         private bool _bestReset = false;
 
         readonly List<UIMine> uiMineList = new();
-        const int POP = 10;
+        const int POP = 500;
         int GenCnt = 1;
         Stopwatch myAlgStopWatch = new();
         Task Gening;
@@ -280,8 +280,8 @@ namespace NueralMinesweeper
             await Task.WhenAll(tasks);
             tasks.Clear();
 
-            mineSweeperers[^1].WoC(mineSweeperers.GetRange(0, POP / 2).ToArray());
-            mineSweeperers[^2].WoC(mineSweeperers.GetRange(0, POP / 2).ToArray());
+            //mineSweeperers[^1].WoC(mineSweeperers.GetRange(0, POP / 2).ToArray());
+            //mineSweeperers[^2].WoC(mineSweeperers.GetRange(0, POP / 2).ToArray());
 
             for (int i = 0; i < POP; i++)
             {
@@ -375,8 +375,8 @@ namespace NueralMinesweeper
         {
             var graph = chart1.ChartAreas[0];
             graph.AxisX.Interval = GenCnt / 5;
-            graph.AxisY.Interval = (int)(_maxFitness / 20);
-            graph.AxisY.Maximum = _maxFitness + 2000f;
+            graph.AxisY.Interval = (int)(_maxFitness / 2);
+            graph.AxisY.Maximum = _maxFitness + 100f;
 
             chart1.Series[MAX_GRAPH_DATANAME].Points.AddXY(currGens, maxFitness);
             chart1.Series[AVG_GRAPH_DATANAME].Points.AddXY(currGens, avgFitness);

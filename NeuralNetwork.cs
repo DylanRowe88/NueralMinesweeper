@@ -267,6 +267,7 @@ namespace NueralMinesweeper
 
         public void Breed(NeuralNetwork parent)
         {
+            fitness = 0;
             // Determine the crossover point (where to splice the weights)
             int crossoverPoint = rand.Next(weights.Length);
 
@@ -285,6 +286,8 @@ namespace NueralMinesweeper
 
         public void WoC(NeuralNetwork[] parents)
         {
+            fitness = 0;
+
             // Determine the crossover point (where to splice the weights)
 
             for (int i = 0; i < weights.Length; i++)

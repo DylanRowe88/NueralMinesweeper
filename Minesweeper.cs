@@ -103,7 +103,7 @@ namespace NueralMinesweeper
             this.mineCount = mineCount;
             bombIndex = new int[mineCount];
             this.multiLife = multiLife;
-            layers = new int[] { fieldSize, 5 * fieldSize, 5 * fieldSize, fieldSize };
+            layers = new int[] { fieldSize, 3 * fieldSize, 3 * fieldSize, fieldSize };
             net = new(layers, mutationChance, mutationSevarity);
             gameFinished = false;
             bombCount = 0;
@@ -265,6 +265,8 @@ namespace NueralMinesweeper
                 }
                 x[index] = float.NegativeInfinity;
                 index = x.IndexOf(x.Max());
+                gameFinished = true;
+                return true;
                 net.AddFitness(-1);
                 repeatTiles++;
                 moveCount++;
