@@ -223,7 +223,7 @@ namespace NueralMinesweeper
                 float sumFitness = 0f;
                 if (_bestField == null || mineSweeperers.First().GetFitness() > _bestField.GetFitness())
                     _bestField = mineSweeperers.First();
-                float maxFitness = _bestField.GetFitness();
+                float maxFitness = mineSweeperers.First().GetFitness();
                 if (maxFitness > _maxFitness)
                     _maxFitness = maxFitness;
                 foreach (Minefield sweeper in mineSweeperers)
