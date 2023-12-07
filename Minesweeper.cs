@@ -32,7 +32,9 @@ namespace NueralMinesweeper
         public readonly int width, height;
         public readonly int fieldSize;    // Width * Height of field
         public readonly int mineCount;    // How many mines are in field
-        public readonly int boomCount;    // How many mines have been hit
+        public readonly int boomCount;   // How many mines have been hit
+        private static int notYourId = 0;
+        public readonly int Id;
 
         private bool gameStarted;
         private bool gameFinished;
@@ -109,6 +111,8 @@ namespace NueralMinesweeper
             uncovered = 0;
             repeatTiles = 0;
             moveCount = 0;
+            notYourId++;
+            Id = notYourId;
         }
 
         public Minefield(int newWidth, int newHeight, int mineCount, int mutationChance, int mutationSevarity, NeuralNetwork Net, bool multiLife = true) // Create minefield with dimensions and minecount
@@ -137,6 +141,8 @@ namespace NueralMinesweeper
             uncovered = 0;
             repeatTiles = 0;
             moveCount = 0;
+            notYourId++;
+            Id = notYourId;
         }
 
         internal void Reset()

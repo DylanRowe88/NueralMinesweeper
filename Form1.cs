@@ -106,9 +106,9 @@ namespace NueralMinesweeper
                 panel3.BackColor = Color.Green;
 
             myAlgStopWatch.Start();
-            mineSweeperers.Sort(); 
+            mineSweeperers.Sort();
             if (_bestField == null || mineSweeperers.First().GetFitness() > _bestField.GetFitness())
-                _bestField = mineSweeperers.First();
+                _bestField = new Minefield(mineSweeperers.First().width, mineSweeperers.First().height, mineSweeperers.First().mineCount, (int)numericUpDown3.Value, (int)numericUpDown4.Value, mineSweeperers.First().GetNet());
             label1.Text = $"MAX: {mineSweeperers[0].GetFitness()}, Min: {mineSweeperers[^1].GetFitness()}";
             label7.Text = "GenCnt: " + GenCnt;
             //progressBar1.Value = 0;
@@ -129,7 +129,7 @@ namespace NueralMinesweeper
             {
                 tmp = mineSweeperers[^1];
             }
-            if(useBest)
+            if (useBest)
             {
                 tmp = _bestField;
             }
@@ -138,6 +138,7 @@ namespace NueralMinesweeper
             label5.Text = "Good Hits: " + tmp.getGoodHits();
             label6.Text = "Uncovered: " + tmp.getUncovered();
             label8.Text = "MoveCnt: " + tmp.getMoveCnt();
+            label12.Text = "Iteration: " + tmp.Id;
 
 
             int[] UIfield = tmp.GetFeild();
@@ -145,18 +146,15 @@ namespace NueralMinesweeper
             {
                 UIMine button = new UIMine(i, tmp.getRowCol(i));
                 button.setTileVal(UIfield[i]);
-                //button.MouseUp += (sender, EventArgs) => { OnMineClick(sender, EventArgs); };
                 pictureBox1.Controls.Add(button);
                 uiMineList.Add(button);
             }
 
-
-            //chart1.Series["Uncovered"].Points.Clear();
-            //progressBar1.Maximum = myMinesweeper.Field.count
             pictureBox1.Invalidate();
 
             myAlgStopWatch.Stop();
             label2.Text = "Algorithm Completion \r\nTime (s): " + myAlgStopWatch.Elapsed.ToString("s'.'FFFFFFF");
+            myAlgStopWatch.Reset();
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -179,7 +177,7 @@ namespace NueralMinesweeper
         private void button2_Click(object sender, EventArgs e)
         {
             //myMinesweeper.Reset();
-            this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
+            UpdateUI();
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -223,7 +221,7 @@ namespace NueralMinesweeper
             lock (mineSweeperers)
             {
                 float sumFitness = 0f;
-                if(_bestField == null || mineSweeperers.First().GetFitness() > _bestField.GetFitness())
+                if (_bestField == null || mineSweeperers.First().GetFitness() > _bestField.GetFitness())
                     _bestField = mineSweeperers.First();
                 float maxFitness = _bestField.GetFitness();
                 if (maxFitness > _maxFitness)
@@ -237,19 +235,19 @@ namespace NueralMinesweeper
 
             //this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
             List<Task> tasks = new List<Task>();
-            for (int i = POP/3; i < POP; i++)
+            for (int i = POP / 3; i < POP; i++)
             {
                 int index = i;
 
                 tasks.Add(Task.Run(() =>
             {
-                mineSweeperers[index] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), (int)numericUpDown3.Value,(int)numericUpDown4.Value,mineSweeperers[index%(POP/3)].GetNet(), true);//copy the first 3rd to the last 2/3rds
+                mineSweeperers[index] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), (int)numericUpDown3.Value, (int)numericUpDown4.Value, mineSweeperers[index % (POP / 3)].GetNet(), true);//copy the first 3rd to the last 2/3rds
             }));
             }
             await Task.WhenAll(tasks);
             tasks.Clear();
 
-            for (int i = POP/3; i < POP*2.0f/3.0f; i++)
+            for (int i = POP / 3; i < POP * 2.0f / 3.0f; i++)
             {
                 int index = i;
                 int parent = rand.Next(POP / 3);
@@ -387,16 +385,21 @@ namespace NueralMinesweeper
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if(!_bestReset)
+            if (!_bestReset)
             {
                 mineSweeperers[0].Reset();
                 _bestReset = true;
             }
-            if(!mineSweeperers[0].IterateNet())
+            if (!mineSweeperers[0].IterateNet())
             {
                 _bestReset = false;
             }
             UpdateUI(true);
+        }
+
+        private void label12_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

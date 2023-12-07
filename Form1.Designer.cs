@@ -28,10 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             panel1 = new Panel();
+            button5 = new Button();
             checkBox2 = new CheckBox();
             label11 = new Label();
             numericUpDown4 = new NumericUpDown();
@@ -58,7 +59,7 @@
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             panel2 = new Panel();
             pictureBox1 = new PictureBox();
-            button5 = new Button();
+            label12 = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown3).BeginInit();
@@ -71,6 +72,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(label12);
             panel1.Controls.Add(button5);
             panel1.Controls.Add(checkBox2);
             panel1.Controls.Add(label11);
@@ -101,6 +103,16 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(348, 880);
             panel1.TabIndex = 0;
+            // 
+            // button5
+            // 
+            button5.Location = new Point(166, 142);
+            button5.Name = "button5";
+            button5.Size = new Size(75, 23);
+            button5.TabIndex = 24;
+            button5.Text = "Step Best";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
             // 
             // checkBox2
             // 
@@ -321,19 +333,19 @@
             // 
             // chart1
             // 
-            chartArea5.Name = "ChartArea1";
-            chart1.ChartAreas.Add(chartArea5);
-            legend5.Enabled = false;
-            legend5.Name = "Legend1";
-            chart1.Legends.Add(legend5);
+            chartArea1.Name = "ChartArea1";
+            chart1.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            chart1.Legends.Add(legend1);
             chart1.Location = new Point(21, 560);
             chart1.Name = "chart1";
-            series5.ChartArea = "ChartArea1";
-            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series5.IsXValueIndexed = true;
-            series5.Legend = "Legend1";
-            series5.Name = "Uncovered";
-            chart1.Series.Add(series5);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.IsXValueIndexed = true;
+            series1.Legend = "Legend1";
+            series1.Name = "Uncovered";
+            chart1.Series.Add(series1);
             chart1.Size = new Size(300, 300);
             chart1.TabIndex = 0;
             chart1.Text = "chart1";
@@ -359,15 +371,15 @@
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
             // 
-            // button5
+            // label12
             // 
-            button5.Location = new Point(166, 142);
-            button5.Name = "button5";
-            button5.Size = new Size(75, 23);
-            button5.TabIndex = 24;
-            button5.Text = "Step Best";
-            button5.UseVisualStyleBackColor = true;
-            button5.Click += button5_Click;
+            label12.AutoSize = true;
+            label12.Location = new Point(169, 174);
+            label12.Name = "label12";
+            label12.Size = new Size(57, 15);
+            label12.TabIndex = 25;
+            label12.Text = "Iteration: ";
+            label12.Click += label12_Click;
             // 
             // Form1
             // 
@@ -421,5 +433,6 @@
         private Label label10;
         private NumericUpDown numericUpDown3;
         private Button button5;
+        private Label label12;
     }
 }
