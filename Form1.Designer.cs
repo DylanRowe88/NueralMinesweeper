@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             panel1 = new Panel();
             checkBox2 = new CheckBox();
             label11 = new Label();
@@ -114,7 +114,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(166, 382);
+            label11.Location = new Point(25, 361);
             label11.Name = "label11";
             label11.Size = new Size(100, 15);
             label11.TabIndex = 22;
@@ -122,7 +122,7 @@
             // 
             // numericUpDown4
             // 
-            numericUpDown4.Location = new Point(166, 400);
+            numericUpDown4.Location = new Point(25, 379);
             numericUpDown4.Name = "numericUpDown4";
             numericUpDown4.Size = new Size(120, 23);
             numericUpDown4.TabIndex = 21;
@@ -131,7 +131,7 @@
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(166, 321);
+            label10.Location = new Point(25, 300);
             label10.Name = "label10";
             label10.Size = new Size(99, 15);
             label10.TabIndex = 20;
@@ -139,7 +139,7 @@
             // 
             // numericUpDown3
             // 
-            numericUpDown3.Location = new Point(166, 339);
+            numericUpDown3.Location = new Point(25, 318);
             numericUpDown3.Name = "numericUpDown3";
             numericUpDown3.Size = new Size(120, 23);
             numericUpDown3.TabIndex = 19;
@@ -148,11 +148,12 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(21, 309);
+            label9.Location = new Point(25, 416);
             label9.Name = "label9";
             label9.Size = new Size(124, 15);
             label9.TabIndex = 18;
             label9.Text = "All Time Fitness High: ";
+            label9.Click += label9_Click;
             // 
             // panel3
             // 
@@ -318,19 +319,19 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            chart1.ChartAreas.Add(chartArea1);
-            legend1.Enabled = false;
-            legend1.Name = "Legend1";
-            chart1.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            chart1.ChartAreas.Add(chartArea2);
+            legend2.Enabled = false;
+            legend2.Name = "Legend1";
+            chart1.Legends.Add(legend2);
             chart1.Location = new Point(21, 560);
             chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.IsXValueIndexed = true;
-            series1.Legend = "Legend1";
-            series1.Name = "Uncovered";
-            chart1.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series2.IsXValueIndexed = true;
+            series2.Legend = "Legend1";
+            series2.Name = "Uncovered";
+            chart1.Series.Add(series2);
             chart1.Size = new Size(300, 300);
             chart1.TabIndex = 0;
             chart1.Text = "chart1";
