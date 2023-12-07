@@ -14,7 +14,7 @@ namespace NueralMinesweeper
         private bool _bestReset = false;
 
         readonly List<UIMine> uiMineList = new();
-        const int POP = 100;
+        const int POP = 10;
         int GenCnt = 1;
         Stopwatch myAlgStopWatch = new();
         Task Gening;
@@ -221,8 +221,6 @@ namespace NueralMinesweeper
             lock (mineSweeperers)
             {
                 float sumFitness = 0f;
-                if (_bestField == null || mineSweeperers.First().GetFitness() > _bestField.GetFitness())
-                    _bestField = mineSweeperers.First();
                 float maxFitness = mineSweeperers.First().GetFitness();
                 if (maxFitness > _maxFitness)
                     _maxFitness = maxFitness;
@@ -231,7 +229,7 @@ namespace NueralMinesweeper
                 float avgFitness = sumFitness / POP;
                 label9.Text = $"All Time Fitness High: {_maxFitness}";
                 label13.Text = "Recent Avg Fit: " + avgFitness;
-                    UpdateChart(GenCnt, maxFitness, avgFitness);
+                UpdateChart(GenCnt, maxFitness, avgFitness);
             }
 
             //this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
@@ -250,35 +248,40 @@ namespace NueralMinesweeper
 
 
 
-            for (int i = POP / 2; i < POP * .75; i++)
+            for (int i = 0; i < POP * .25; i++)
             {
                 int index = i;
                 int parent = rand.Next(POP / 2);
                 tasks.Add(Task.Run(() =>
                 {
-                    mineSweeperers[index].Cross(mineSweeperers[parent].GetNet());//copy the first 3rd to the last 2/3rds
+                    mineSweeperers[index].Cross(mineSweeperers[parent + POP / 2].GetNet());//copy the first 3rd to the last 2/3rds
                 }));
             }
             await Task.WhenAll(tasks);
             tasks.Clear();
-            for (int i = (int)(POP * .75); i < POP; i++)
+            for (int i = (int)(POP * .25); i < POP / 2; i++)
             {
                 int index = i;
-                tasks.Add(Task.Run(() =>
-                {
-                    mineSweeperers[index].Reset();
-                }));
 
                 tasks.Add(Task.Run(() =>
                 {
                     mineSweeperers[index].Mutate();
                 }));
             }
+            for(int i = 0; i < POP / 2; i++)
+            {
+                int index = i;
+
+                tasks.Add(Task.Run(() =>
+                {
+                    mineSweeperers[index].Reset();
+                }));
+            }
             await Task.WhenAll(tasks);
             tasks.Clear();
 
-            mineSweeperers[50].WoC(mineSweeperers.GetRange(0, POP / 2).ToArray());
-            mineSweeperers[49].WoC(mineSweeperers.GetRange(0, POP / 2).ToArray());
+            mineSweeperers[^1].WoC(mineSweeperers.GetRange(0, POP / 2).ToArray());
+            mineSweeperers[^2].WoC(mineSweeperers.GetRange(0, POP / 2).ToArray());
 
             for (int i = 0; i < POP; i++)
             {
@@ -373,7 +376,7 @@ namespace NueralMinesweeper
             var graph = chart1.ChartAreas[0];
             graph.AxisX.Interval = GenCnt / 5;
             graph.AxisY.Interval = (int)(_maxFitness / 20);
-            graph.AxisY.Maximum = _maxFitness + 5000f;
+            graph.AxisY.Maximum = _maxFitness + 2000f;
 
             chart1.Series[MAX_GRAPH_DATANAME].Points.AddXY(currGens, maxFitness);
             chart1.Series[AVG_GRAPH_DATANAME].Points.AddXY(currGens, avgFitness);
