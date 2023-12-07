@@ -306,6 +306,10 @@ namespace NueralMinesweeper
         {
             net.Mutate();
         }
+        public void Cross(NeuralNetwork parent)
+        {
+            net.Breed(parent);
+        }
         private void tryClearing(int Row, int Col)
         {
             if ((Row <= height && Col <= height && Row >= 0 && Col >= 0) && (getIndex(Row, Col) >= 0 && getIndex(Row, Col) < fieldSize && !field[getIndex(Row, Col)].isMine))
