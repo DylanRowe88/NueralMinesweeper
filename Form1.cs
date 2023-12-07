@@ -11,7 +11,7 @@ namespace NueralMinesweeper
         private object comboBox2;
 
         readonly List<UIMine> uiMineList = new();
-        const int POP = 1;
+        const int POP = 2;
         Stopwatch myAlgStopWatch = new();
         Task Gening;
         const int FIELDSIZE = 20;
@@ -136,9 +136,12 @@ namespace NueralMinesweeper
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            await Gen();
-            mineSweeperers.Sort();
-            this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
+            for (int i = 0; i < 20; i++)
+            {
+                await Gen();
+            }
+            //mineSweeperers.Sort();
+            //this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -174,7 +177,7 @@ namespace NueralMinesweeper
             }
             await Task.WhenAll(tasks);
             mineSweeperers.Sort();
-            this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
+            //this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
 
         }
 
@@ -184,7 +187,7 @@ namespace NueralMinesweeper
                 await Gening;
             Gening = Task.Delay(1000000000);
             mineSweeperers.Sort();
-            this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
+            //this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
             List<Task> tasks = new List<Task>();
             for (int i = 0; i < POP / 2; i++)
             {

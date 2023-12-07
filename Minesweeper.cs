@@ -49,7 +49,7 @@ namespace NueralMinesweeper
 
         private int[] layers;
         private NeuralNetwork net;
-
+       
         public void Import(string filePath)
         {
             net.Import(filePath);
@@ -187,7 +187,7 @@ namespace NueralMinesweeper
                         }
                     if (bombCount == mineCount)
                         gameFinished = true;
-                    return false;
+                    return true;
                 }
                 if (field[tileIndex].adjMineCnt == 0 && !field[tileIndex].isMine)
                 {
@@ -246,36 +246,38 @@ namespace NueralMinesweeper
 
         public bool ItterateNet()
         {
-            
-            var x = net.FeedForward(GetFeildF()).ToList();
-            int index = x.IndexOf(x.Max());
-            moveCount++;
-            while (!makeMove(index))
+            lock (net)
             {
-                if (gameFinished)
-                {
-                    if (GetFitness() == 0)
-                    {
-                        Debug.WriteLine("things broke");
-                    }
-                    return false;
-                }
-                x[index] = float.NegativeInfinity;
-                index = x.IndexOf(x.Max());
-                net.AddFitness(-10);
-                repeatTiles++;
+                var x = net.FeedForward(GetFeildF()).ToList();
+                int index = x.IndexOf(x.Max());
                 moveCount++;
+                while (!makeMove(index))
+                {
+                    if (gameFinished)
+                    {
+                        if (GetFitness() == 0)
+                        {
+                            Debug.WriteLine("things broke");
+                        }
+                        return false;
+                    }
+                    x[index] = float.NegativeInfinity;
+                    index = x.IndexOf(x.Max());
+                    net.AddFitness(-1);
+                    repeatTiles++;
+                    moveCount++;
+                }
+                if (field[index].isMine)
+                {
+                    net.AddFitness(-50);
+                }
+                else
+                {
+                    net.AddFitness(10);
+                    goodHits++;
+                }
+                return true;
             }
-            if (field[index].isMine)
-            {
-                net.AddFitness(-1000);
-            }
-            else
-            {
-                net.AddFitness(100);
-                goodHits++;
-            }
-            return true;
         }
         public float GetFitness()
         {
