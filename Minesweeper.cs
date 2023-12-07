@@ -316,6 +316,13 @@ namespace NueralMinesweeper
         {
             net.Breed(parent);
         }
+        public void WoC(Minefield[] parents)
+        {
+            List<NeuralNetwork> nodes = new List<NeuralNetwork>();
+            foreach (Minefield m in parents)
+                nodes.Add(m.GetNet());
+            net.WoC(nodes.ToArray());
+        }
         private void tryClearing(int Row, int Col)
         {
             if ((Row <= height && Col <= height && Row >= 0 && Col >= 0) && (getIndex(Row, Col) >= 0 && getIndex(Row, Col) < fieldSize && !field[getIndex(Row, Col)].isMine))
