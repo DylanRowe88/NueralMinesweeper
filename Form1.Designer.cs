@@ -32,6 +32,7 @@
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             panel1 = new Panel();
+            label9 = new Label();
             panel3 = new Panel();
             numericUpDown2 = new NumericUpDown();
             label8 = new Label();
@@ -62,6 +63,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(label9);
             panel1.Controls.Add(panel3);
             panel1.Controls.Add(numericUpDown2);
             panel1.Controls.Add(label8);
@@ -85,6 +87,15 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(348, 880);
             panel1.TabIndex = 0;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(21, 309);
+            label9.Name = "label9";
+            label9.Size = new Size(124, 15);
+            label9.TabIndex = 18;
+            label9.Text = "All Time Fitness High: ";
             // 
             // panel3
             // 
@@ -252,6 +263,7 @@
             // 
             chartArea1.Name = "ChartArea1";
             chart1.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
             legend1.Name = "Legend1";
             chart1.Legends.Add(legend1);
             chart1.Location = new Point(21, 560);
@@ -330,5 +342,6 @@
         private Label label8;
         private NumericUpDown numericUpDown2;
         private Panel panel3;
+        private Label label9;
     }
 }
