@@ -9,7 +9,9 @@ namespace NueralMinesweeper
     {
         private List<Minefield> mineSweeperers;
         private object comboBox2;
+        private Minefield _bestField;
         private float _maxFitness = float.MinValue;
+        private bool _bestReset = false;
 
         readonly List<UIMine> uiMineList = new();
         const int POP = 100;
@@ -96,14 +98,17 @@ namespace NueralMinesweeper
             }
         }
 
-        private void UpdateUI()
+        private void UpdateUI(bool useBest = false)
         {
             if (Gening != Task.CompletedTask)
                 panel3.BackColor = Color.Red;
             else
                 panel3.BackColor = Color.Green;
 
-            mineSweeperers.Sort();
+            myAlgStopWatch.Start();
+            mineSweeperers.Sort(); 
+            if (_bestField == null || mineSweeperers.First().GetFitness() > _bestField.GetFitness())
+                _bestField = mineSweeperers.First();
             label1.Text = $"MAX: {mineSweeperers[0].GetFitness()}, Min: {mineSweeperers[^1].GetFitness()}";
             label7.Text = "GenCnt: " + GenCnt;
             //progressBar1.Value = 0;
@@ -123,6 +128,10 @@ namespace NueralMinesweeper
             else
             {
                 tmp = mineSweeperers[^1];
+            }
+            if(useBest)
+            {
+                tmp = _bestField;
             }
             label3.Text = "Bombs Hit: " + tmp.GetBombsHit();
             label4.Text = "Repeat Tiles: " + tmp.getRepeatTiles();
@@ -146,7 +155,6 @@ namespace NueralMinesweeper
             //progressBar1.Maximum = myMinesweeper.Field.count
             pictureBox1.Invalidate();
 
-            myAlgStopWatch.Start();
             myAlgStopWatch.Stop();
             label2.Text = "Algorithm Completion \r\nTime (s): " + myAlgStopWatch.Elapsed.ToString("s'.'FFFFFFF");
         }
@@ -215,7 +223,9 @@ namespace NueralMinesweeper
             lock (mineSweeperers)
             {
                 float sumFitness = 0f;
-                float maxFitness = mineSweeperers.First().GetFitness();
+                if(_bestField == null || mineSweeperers.First().GetFitness() > _bestField.GetFitness())
+                    _bestField = mineSweeperers.First();
+                float maxFitness = _bestField.GetFitness();
                 if (maxFitness > _maxFitness)
                     _maxFitness = maxFitness;
                 foreach (Minefield sweeper in mineSweeperers)
@@ -378,6 +388,20 @@ namespace NueralMinesweeper
         private void label9_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if(!_bestReset)
+            {
+                mineSweeperers[0].Reset();
+                _bestReset = true;
+            }
+            if(!mineSweeperers[0].IterateNet())
+            {
+                _bestReset = false;
+            }
+            UpdateUI(true);
         }
     }
 }
