@@ -51,6 +51,7 @@
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             panel2 = new Panel();
             pictureBox1 = new PictureBox();
+            panel3 = new Panel();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
@@ -61,6 +62,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(panel3);
             panel1.Controls.Add(numericUpDown2);
             panel1.Controls.Add(label8);
             panel1.Controls.Add(label7);
@@ -277,6 +279,13 @@
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
             // 
+            // panel3
+            // 
+            panel3.Location = new Point(277, 41);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(44, 37);
+            panel3.TabIndex = 17;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -319,5 +328,6 @@
         private Label label7;
         private Label label8;
         private NumericUpDown numericUpDown2;
+        private Panel panel3;
     }
 }

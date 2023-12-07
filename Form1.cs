@@ -11,7 +11,7 @@ namespace NueralMinesweeper
         private object comboBox2;
 
         readonly List<UIMine> uiMineList = new();
-        const int POP = 2;
+        const int POP = 10;
         int GenCnt = 1;
         Stopwatch myAlgStopWatch = new();
         Task Gening;
@@ -91,6 +91,11 @@ namespace NueralMinesweeper
 
         private void UpdateUI()
         {
+            if (Gening != Task.CompletedTask)
+                panel3.BackColor = Color.Red;
+            else
+                panel3.BackColor = Color.Green;
+
             mineSweeperers.Sort();
             label1.Text = $"MAX: {mineSweeperers[0].GetFitness()}, Min: {mineSweeperers[^1].GetFitness()}";
             label7.Text = "GenCnt: " + GenCnt;
@@ -153,6 +158,7 @@ namespace NueralMinesweeper
             {
                 await Gen();
             }
+            Gening = Task.CompletedTask;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -285,15 +291,15 @@ namespace NueralMinesweeper
 
 
 
-    // Created class inheriting Button to customize its shape
-    class UIMine : Button
-    {
-        public readonly int sideLen = 35; // Field is made of squares...
-        public readonly int index = -1;
-        public readonly int row = -1;
-        public readonly int col = -1;
-        public readonly int xOffset = 20;
-        public readonly int yOffset = 20;
+// Created class inheriting Button to customize its shape
+class UIMine : Button
+{
+    public readonly int sideLen = 35; // Field is made of squares...
+    public readonly int index = -1;
+    public readonly int row = -1;
+    public readonly int col = -1;
+    public readonly int xOffset = 20;
+    public readonly int yOffset = 20;
 
     public UIMine(int Index, (int, int) rowCol)
     {

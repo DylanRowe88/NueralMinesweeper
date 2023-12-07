@@ -198,13 +198,10 @@ namespace NueralMinesweeper
                                 tryClearing(RowCol.Item1 + j, RowCol.Item2 + k); //all
                 }
                 uncovered++;
-                if (uncovered >= fieldSize - mineCount && !multiLife)
+                if (uncovered >= fieldSize - mineCount)
                 {
                     gameFinished = true;
                 }
-                if(multiLife)
-                    if(uncovered >= fieldSize+mineCount-bombCount)
-                        gameFinished=true;
                 return true;
 
             }
