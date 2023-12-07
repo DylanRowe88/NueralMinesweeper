@@ -262,17 +262,17 @@ namespace NueralMinesweeper
                 }
                 x[index] = float.NegativeInfinity;
                 index = x.IndexOf(x.Max());
-                net.AddFitness(-10);
+                net.AddFitness(-1);
                 repeatTiles++;
                 moveCount++;
             }
             if (field[index].isMine)
             {
-                net.AddFitness(-1000);
+                net.AddFitness(-100);
             }
             else
             {
-                net.AddFitness(100);
+                net.AddFitness(10);
                 goodHits++;
             }
             return true;
@@ -300,6 +300,10 @@ namespace NueralMinesweeper
         public int getUncovered()
         {
             return uncovered;
+        }
+        public int getMoveCnt()
+        {
+            return moveCount;
         }
         public void Mutate()
         {
