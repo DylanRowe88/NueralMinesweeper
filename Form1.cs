@@ -12,7 +12,7 @@ namespace NueralMinesweeper
         private float _maxFitness = float.MinValue;
 
         readonly List<UIMine> uiMineList = new();
-        const int POP = 10;
+        const int POP = 50;
         int GenCnt = 1;
         Stopwatch myAlgStopWatch = new();
         Task Gening;
@@ -189,7 +189,7 @@ namespace NueralMinesweeper
             List<Task> tasks = new List<Task>();
             for (int i = 0; i < POP; i++)
             {
-                tasks.Add(Task.Run(() => { mineSweeperers.Add(new(FIELDSIZE, FIELDSIZE, (int)(FIELDSIZE * 2.5), true)); }));
+                tasks.Add(Task.Run(() => { mineSweeperers.Add(new(FIELDSIZE, FIELDSIZE, (int)(FIELDSIZE * 2.5), (int)numericUpDown3.Value, (int)numericUpDown4.Value, true)); }));
             }
             await Task.WhenAll(tasks);
             tasks.Clear();
@@ -229,7 +229,7 @@ namespace NueralMinesweeper
 
                 tasks.Add(Task.Run(() =>
             {
-                mineSweeperers[index + POP / 2] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), mineSweeperers[i].GetNet(), true);
+                mineSweeperers[index + POP / 2] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), (int)numericUpDown3.Value,(int)numericUpDown4.Value,mineSweeperers[i].GetNet(), true);
             }));
             }
             await Task.WhenAll(tasks);
@@ -302,6 +302,14 @@ namespace NueralMinesweeper
             UpdateUI();
         }
 
+        private async void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            while (checkBox2.Checked)
+                await Gen();
+            Gening = Task.CompletedTask;
+
+        }
+    
         private void CreateChart()
         {
             var graph = chart1.ChartAreas[0];

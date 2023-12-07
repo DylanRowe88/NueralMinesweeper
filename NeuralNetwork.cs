@@ -15,14 +15,18 @@ namespace NueralMinesweeper
 
         private static readonly Random rand = new();
 
-
+        int mutationC;
+        double mutationS;
         
-        public NeuralNetwork(int[] layers)
+        public NeuralNetwork(int[] layers, int mutationC = 3, int mutationS = 100)
         {
             fitness = 0;
             this.layers = new int[layers.Length];
             for (int i = 0; i < layers.Length; i++)
                 this.layers[i] = layers[i];
+
+            this.mutationC = mutationC;
+            this.mutationS = mutationS;
 
             InitNeurons();
             InitWeights();
@@ -30,8 +34,11 @@ namespace NueralMinesweeper
             fitness = 0;
         }
 
-        public NeuralNetwork(NeuralNetwork copyNetwork)
+        public NeuralNetwork(NeuralNetwork copyNetwork, int mutationC = 3, int mutationS = 100)
         {
+            this.mutationC = mutationC;
+            this.mutationS = mutationS;
+
             fitness = 0;
 
             this.layers = new int[copyNetwork.layers.Length];
@@ -234,23 +241,23 @@ namespace NueralMinesweeper
 
                         float mutationChance = (float)(rand.NextDouble() * 100);
 
-                        if (mutationChance <= 3f)
+                        if (mutationChance <= mutationC)
                         { //if 1
                           //flip sign of weight
                             weight *= -1f;
                         }
-                        else if (mutationChance <= 6f)
+                        else if (mutationChance <= 2*mutationC)
                         { //if 2
                           //pick random weight between -1 and 1
                             weight = (float)(rand.NextDouble() * 2 - 1);
                         }
-                        else if (mutationChance <= 9f)
+                        else if (mutationChance <= 3* mutationC)
                         { //if 3
                           //randomly increase by 0% to 100%
                             float factor = (float)(rand.NextDouble() + 1);
                             weight *= factor;
                         }
-                        else if (mutationChance <= 12f)
+                        else if (mutationChance <= 4* mutationC)
                         { //if 4
                           //randomly decrease by 0% to 100%
                             float factor = (float)rand.NextDouble();
