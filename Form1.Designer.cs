@@ -28,11 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             panel1 = new Panel();
             checkBox2 = new CheckBox();
+            label11 = new Label();
+            numericUpDown4 = new NumericUpDown();
+            label10 = new Label();
+            numericUpDown3 = new NumericUpDown();
+            label9 = new Label();
             panel3 = new Panel();
             numericUpDown2 = new NumericUpDown();
             label8 = new Label();
@@ -53,27 +58,24 @@
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             panel2 = new Panel();
             pictureBox1 = new PictureBox();
-            numericUpDown3 = new NumericUpDown();
-            label9 = new Label();
-            label10 = new Label();
-            numericUpDown4 = new NumericUpDown();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown4).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown3).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown4).BeginInit();
             SuspendLayout();
             // 
             // panel1
             // 
-            panel1.Controls.Add(label10);
-            panel1.Controls.Add(numericUpDown4);
-            panel1.Controls.Add(label9);
-            panel1.Controls.Add(numericUpDown3);
             panel1.Controls.Add(checkBox2);
+            panel1.Controls.Add(label11);
+            panel1.Controls.Add(numericUpDown4);
+            panel1.Controls.Add(label10);
+            panel1.Controls.Add(numericUpDown3);
+            panel1.Controls.Add(label9);
             panel1.Controls.Add(panel3);
             panel1.Controls.Add(numericUpDown2);
             panel1.Controls.Add(label8);
@@ -101,13 +103,57 @@
             // checkBox2
             // 
             checkBox2.AutoSize = true;
-            checkBox2.Location = new Point(158, 117);
+            checkBox2.Location = new Point(182, 113);
             checkBox2.Name = "checkBox2";
-            checkBox2.Size = new Size(81, 19);
-            checkBox2.TabIndex = 18;
-            checkBox2.Text = "Const Gen";
+            checkBox2.Size = new Size(86, 19);
+            checkBox2.TabIndex = 23;
+            checkBox2.Text = "Const Gen?";
             checkBox2.UseVisualStyleBackColor = true;
             checkBox2.CheckedChanged += checkBox2_CheckedChanged;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(25, 361);
+            label11.Name = "label11";
+            label11.Size = new Size(100, 15);
+            label11.TabIndex = 22;
+            label11.Text = "Mutation Severity";
+            // 
+            // numericUpDown4
+            // 
+            numericUpDown4.Location = new Point(25, 379);
+            numericUpDown4.Name = "numericUpDown4";
+            numericUpDown4.Size = new Size(120, 23);
+            numericUpDown4.TabIndex = 21;
+            numericUpDown4.Value = new decimal(new int[] { 100, 0, 0, 0 });
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(25, 300);
+            label10.Name = "label10";
+            label10.Size = new Size(99, 15);
+            label10.TabIndex = 20;
+            label10.Text = "Mutation Chance";
+            // 
+            // numericUpDown3
+            // 
+            numericUpDown3.Location = new Point(25, 318);
+            numericUpDown3.Name = "numericUpDown3";
+            numericUpDown3.Size = new Size(120, 23);
+            numericUpDown3.TabIndex = 19;
+            numericUpDown3.Value = new decimal(new int[] { 3, 0, 0, 0 });
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(25, 416);
+            label9.Name = "label9";
+            label9.Size = new Size(124, 15);
+            label9.TabIndex = 18;
+            label9.Text = "All Time Fitness High: ";
+            label9.Click += label9_Click;
             // 
             // panel3
             // 
@@ -273,18 +319,19 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            chart1.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            chart1.ChartAreas.Add(chartArea2);
+            legend2.Enabled = false;
+            legend2.Name = "Legend1";
+            chart1.Legends.Add(legend2);
             chart1.Location = new Point(21, 560);
             chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.IsXValueIndexed = true;
-            series1.Legend = "Legend1";
-            series1.Name = "Uncovered";
-            chart1.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series2.IsXValueIndexed = true;
+            series2.Legend = "Legend1";
+            series2.Name = "Uncovered";
+            chart1.Series.Add(series2);
             chart1.Size = new Size(300, 300);
             chart1.TabIndex = 0;
             chart1.Text = "chart1";
@@ -310,42 +357,6 @@
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
             // 
-            // numericUpDown3
-            // 
-            numericUpDown3.Location = new Point(25, 329);
-            numericUpDown3.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numericUpDown3.Name = "numericUpDown3";
-            numericUpDown3.Size = new Size(120, 23);
-            numericUpDown3.TabIndex = 19;
-            numericUpDown3.Value = new decimal(new int[] { 3, 0, 0, 0 });
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(25, 311);
-            label9.Name = "label9";
-            label9.Size = new Size(99, 15);
-            label9.TabIndex = 20;
-            label9.Text = "Mutation Chance";
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Location = new Point(25, 364);
-            label10.Name = "label10";
-            label10.Size = new Size(86, 15);
-            label10.TabIndex = 22;
-            label10.Text = "Mutation Scale";
-            // 
-            // numericUpDown4
-            // 
-            numericUpDown4.Location = new Point(25, 382);
-            numericUpDown4.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numericUpDown4.Name = "numericUpDown4";
-            numericUpDown4.Size = new Size(120, 23);
-            numericUpDown4.TabIndex = 21;
-            numericUpDown4.Value = new decimal(new int[] { 100, 0, 0, 0 });
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -358,13 +369,13 @@
             Load += Form1_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown4).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown3).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown2).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
             panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown3).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown4).EndInit();
             ResumeLayout(false);
         }
 
@@ -391,10 +402,11 @@
         private Label label8;
         private NumericUpDown numericUpDown2;
         private Panel panel3;
-        private CheckBox checkBox2;
-        private Label label10;
-        private NumericUpDown numericUpDown4;
         private Label label9;
+        private CheckBox checkBox2;
+        private Label label11;
+        private NumericUpDown numericUpDown4;
+        private Label label10;
         private NumericUpDown numericUpDown3;
     }
 }

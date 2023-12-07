@@ -9,6 +9,7 @@ namespace NueralMinesweeper
     {
         private List<Minefield> mineSweeperers;
         private object comboBox2;
+        private float _maxFitness = float.MinValue;
 
         readonly List<UIMine> uiMineList = new();
         const int POP = 50;
@@ -19,6 +20,9 @@ namespace NueralMinesweeper
         static Random rand = new Random();
         const string MAX_GRAPH_DATANAME = "Golden-Child Gens";
         const string MIN_GRAPH_DATANAME = "Middle-Child Gens";
+
+        const string MAX_GRAPH_DATANAME = "Max Fitness";
+        const string AVG_GRAPH_DATANAME = "Avg Fitness";
 
         public Form1()
         {
@@ -209,6 +213,20 @@ namespace NueralMinesweeper
                 await Gening;
             Gening = Task.Delay(1000000000);
             mineSweeperers.Sort();
+
+            lock (mineSweeperers)
+            {
+                float sumFitness = 0f;
+                float maxFitness = mineSweeperers.First().GetFitness();
+                if (maxFitness > _maxFitness)
+                    _maxFitness = maxFitness;
+                foreach (Minefield sweeper in mineSweeperers)
+                    sumFitness += sweeper.GetFitness();
+                float avgFitness = sumFitness / POP;
+                label9.Text = $"All Time Fitness High: {_maxFitness}";
+                UpdateChart(GenCnt, maxFitness, avgFitness);
+            }
+
             //this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
             List<Task> tasks = new List<Task>();
             for (int i = POP/3; i < POP; i++)
@@ -309,7 +327,7 @@ namespace NueralMinesweeper
             Gening = Task.CompletedTask;
 
         }
-    
+
         private void CreateChart()
         {
             var graph = chart1.ChartAreas[0];
@@ -322,7 +340,8 @@ namespace NueralMinesweeper
 
             //-25000 to 3500
             graph.AxisY.LabelStyle.Format = "";
-            graph.AxisY.Minimum = 0;
+
+
 
             chart1.Series[0].IsVisibleInLegend = false;
 
@@ -331,22 +350,31 @@ namespace NueralMinesweeper
             chart1.Series[MAX_GRAPH_DATANAME].Color = Color.Purple;
             chart1.Series[MAX_GRAPH_DATANAME].IsVisibleInLegend = true;
 
-            chart1.Series.Add(MIN_GRAPH_DATANAME);
-            chart1.Series[MIN_GRAPH_DATANAME].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            chart1.Series[MIN_GRAPH_DATANAME].Color = Color.DarkGreen;
-            chart1.Series[MIN_GRAPH_DATANAME].IsVisibleInLegend = true;
-
-            UpdateChart();
+            chart1.Series.Add(AVG_GRAPH_DATANAME);
+            chart1.Series[AVG_GRAPH_DATANAME].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            chart1.Series[AVG_GRAPH_DATANAME].Color = Color.DarkGreen;
+            chart1.Series[AVG_GRAPH_DATANAME].IsVisibleInLegend = true;
         }
 
-        private void UpdateChart()
+        private void UpdateChart(int currGens, float maxFitness, float avgFitness)
         {
-            
+            var graph = chart1.ChartAreas[0];
+            graph.AxisX.Interval = GenCnt / 5;
+            graph.AxisY.Interval = (int)(_maxFitness / 20);
+            graph.AxisY.Maximum = _maxFitness + 5000f;
+
+            chart1.Series[MAX_GRAPH_DATANAME].Points.AddXY(currGens, maxFitness);
+            chart1.Series[AVG_GRAPH_DATANAME].Points.AddXY(currGens, avgFitness);
         }
 
         private void chart1_Click(object sender, EventArgs e)
         {
-            UpdateChart();
+
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
