@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NueralMinesweeper
+﻿namespace NueralMinesweeper
 {
     public class NeuralNetwork
     {
@@ -17,7 +11,7 @@ namespace NueralMinesweeper
 
         int mutationC;
         double mutationS;
-        
+
         public NeuralNetwork(int[] layers, int mutationC = 3, int mutationS = 100)
         {
             fitness = 0;
@@ -246,18 +240,18 @@ namespace NueralMinesweeper
                           //flip sign of weight
                             weight *= -1f;
                         }
-                        else if (mutationChance <= 2*mutationC)
+                        else if (mutationChance <= 2 * mutationC)
                         { //if 2
                           //pick random weight between -1 and 1
                             weight = (float)(rand.NextDouble() * 2 - 1);
                         }
-                        else if (mutationChance <= 3* mutationC)
+                        else if (mutationChance <= 3 * mutationC)
                         { //if 3
                           //randomly increase by 0% to 100%
                             float factor = (float)(rand.NextDouble() + 1);
                             weight *= factor;
                         }
-                        else if (mutationChance <= 4* mutationC)
+                        else if (mutationChance <= 4 * mutationC)
                         { //if 4
                           //randomly decrease by 0% to 100%
                             float factor = (float)rand.NextDouble();
@@ -269,6 +263,26 @@ namespace NueralMinesweeper
                 }
             }
         }
+
+
+        public void Breed(NeuralNetwork parent)
+        {
+            // Determine the crossover point (where to splice the weights)
+            int crossoverPoint = rand.Next(weights.Length);
+
+            for (int i = crossoverPoint; i < weights.Length; i++)
+            {
+                for (int j = 0; j < weights[i].Length; j++)
+                {
+                    for (int k = 0; k < weights[i][j].Length; k++)
+                    {
+                        // Splice the weights from the parent into this network
+                        weights[i][j][k] = parent.weights[i][j][k];
+                    }
+                }
+            }
+        }
+
 
         public void AddFitness(float fit)
         {

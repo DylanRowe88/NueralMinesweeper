@@ -19,6 +19,7 @@ namespace NueralMinesweeper
         Stopwatch myAlgStopWatch = new();
         Task Gening;
         const int FIELDSIZE = 20;
+        static Random rand = new Random();
 
         const string MAX_GRAPH_DATANAME = "Max Fitness";
         const string AVG_GRAPH_DATANAME = "Avg Fitness";
@@ -236,14 +237,26 @@ namespace NueralMinesweeper
 
             //this.Invoke(UpdateUI, mineSweeperers.Max(sweeper => sweeper.GetFitness()), mineSweeperers.Min(sweeper => sweeper.GetFitness()));
             List<Task> tasks = new List<Task>();
-            for (int i = 0; i < POP / 2; i++)
+            for (int i = POP/3; i < POP; i++)
             {
                 int index = i;
 
                 tasks.Add(Task.Run(() =>
             {
-                mineSweeperers[index + POP / 2] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), (int)numericUpDown3.Value, (int)numericUpDown4.Value, mineSweeperers[i].GetNet(), true);
+                mineSweeperers[index] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), (int)numericUpDown3.Value,(int)numericUpDown4.Value,mineSweeperers[index%(POP/3)].GetNet(), true);//copy the first 3rd to the last 2/3rds
             }));
+            }
+            await Task.WhenAll(tasks);
+            tasks.Clear();
+
+            for (int i = POP/3; i < POP*2.0f/3.0f; i++)
+            {
+                int index = i;
+                int parent = rand.Next(POP / 3);
+                tasks.Add(Task.Run(() =>
+                {
+                    mineSweeperers[index] = new(FIELDSIZE, FIELDSIZE, (int)(2.5 * FIELDSIZE), (int)numericUpDown3.Value, (int)numericUpDown4.Value, mineSweeperers[parent].GetNet(), true);//copy the first 3rd to the last 2/3rds
+                }));
             }
             await Task.WhenAll(tasks);
             tasks.Clear();
