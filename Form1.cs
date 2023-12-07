@@ -18,8 +18,6 @@ namespace NueralMinesweeper
         Task Gening;
         const int FIELDSIZE = 20;
         static Random rand = new Random();
-        const string MAX_GRAPH_DATANAME = "Golden-Child Gens";
-        const string MIN_GRAPH_DATANAME = "Middle-Child Gens";
 
         const string MAX_GRAPH_DATANAME = "Max Fitness";
         const string AVG_GRAPH_DATANAME = "Avg Fitness";
